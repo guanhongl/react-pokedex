@@ -14,7 +14,7 @@ class Pokedex extends React.Component {
         super(props);
         this.state = {
             pokemon: {
-                abilities: [],
+                abilities: {},
                 height: NaN,
                 name: '',
                 sprite: '',
@@ -22,6 +22,7 @@ class Pokedex extends React.Component {
                 types: [],
                 weight: NaN,
             },
+            abilityDesc: '',
         };
         this.getPokemon = this.getPokemon.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
@@ -58,7 +59,7 @@ class Pokedex extends React.Component {
         axios.get(`https://pokeapi.co/api/v2/ability/${ability}`)
             .then(response => {
                 console.log(response.data.effect_entries[1].effect);
-                return response.data.effect_entries[1].effect;
+                this.setState({ abilityDesc: response.data.effect_entries[1].effect });
             })
             .catch(error => {
                 console.log(error);
@@ -89,11 +90,25 @@ class Pokedex extends React.Component {
         const filteredAbilities = abilities.filter(ability => !ability.is_hidden);
         const keys = _.pluck(_.pluck(filteredAbilities, 'ability'), 'name');
         console.log(keys);
-        const values = keys.map(ability =>
+        // ARRAY ITERATORS DO NOT AWAIT A RESULT
+        /*const values = keys.map(ability =>
             this.getAbilityDesc(ability)
-        );
-        console.log(values);
-        return keys;
+        );*/
+        const values = [];
+        for (const key of keys) {
+            this.getAbilityDesc(key);
+            setTimeout(() => {
+                //console.log(this.state.abilityDesc);
+                values.push(this.state.abilityDesc);
+                //console.log(values);
+            }, 100);
+        }
+        let retObj;
+        setTimeout(() => {
+            console.log(values)
+            retObj = _.object(keys, values)
+        }, 100);
+        return retObj;
     }
 
     /**
