@@ -24,28 +24,41 @@ class Pokedex extends React.Component {
                 /** weight in hectograms */
                 weight: NaN,
             },
+            pokemonList: [],
         };
         this.getPokemon = this.getPokemon.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
         this.getAbilityDesc = this.getAbilityDesc.bind(this);
         this.getAbilities = this.getAbilities.bind(this);
+        this.getPokemonList = this.getPokemonList.bind(this);
     }
 
     /**
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon();
+        this.getPokemon(6, false);
+        this.getPokemonList();
         //this.getAbilityDesc('blaze');
     }
 
     /**
      * get Pokemon data
+     * @param pokemon name
+     * @param boolean isGettingList
      */
-    getPokemon() {
-        axios.get('https://pokeapi.co/api/v2/pokemon/6')
+    getPokemon(name, isGettingList) {
+        axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
             .then(response => {
-                this.setPokemon(response.data);
+                if (isGettingList) {
+                    //console.log(response);
+                    this.setState({
+                        pokemonList: [...this.state.pokemonList, response.data.name]
+                    });
+                }
+                else {
+                    this.setPokemon(response.data);
+                }
             })
             .catch(error => {
                 console.log(error);
@@ -53,8 +66,18 @@ class Pokedex extends React.Component {
     }
 
     /**
+     * populate pokemon list w/ names
+     */
+    getPokemonList() {
+        /** TODO */
+        for (let i = 1; i <= 100; i++) {
+            this.getPokemon(i, true);
+        }
+    }
+
+    /**
      * get ability description
-     * @param ability string
+     * @param ability name
      */
     getAbilityDesc(ability) {
         axios.get(`https://pokeapi.co/api/v2/ability/${ability}`)
@@ -74,7 +97,7 @@ class Pokedex extends React.Component {
 
     /**
      * set Pokemon state
-     * @param data array
+     * @param array data
      */
     setPokemon(data) {
         const pokemon = {};
@@ -91,7 +114,7 @@ class Pokedex extends React.Component {
 
     /**
      * get non-hidden abilities
-     * @param abilities array
+     * @param array abilities
      */
     getAbilities(abilities) {
         /** filter out hidden abilities */
@@ -105,7 +128,7 @@ class Pokedex extends React.Component {
 
     /**
      * get stats
-     * @param stats array
+     * @param array stats
      */
     getStats(stats) {
         /** extract a list of stat names */
@@ -118,7 +141,7 @@ class Pokedex extends React.Component {
 
     /**
      * get types
-     * @param types array
+     * @param array types
      */
     getTypes(types) {
         /** extract a list of type names */
