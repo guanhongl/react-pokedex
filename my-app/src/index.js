@@ -15,14 +15,15 @@ class Pokedex extends React.Component {
         this.state = {
             pokemon: {
                 abilities: {},
+                /** height in decimetres */
                 height: NaN,
                 name: '',
                 sprite: '',
                 stats: {},
                 types: [],
+                /** weight in hectograms */
                 weight: NaN,
             },
-            abilityDesc: '',
         };
         this.getPokemon = this.getPokemon.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
@@ -42,7 +43,7 @@ class Pokedex extends React.Component {
      * get Pokemon data
      */
     getPokemon() {
-        axios.get('https://pokeapi.co/api/v2/pokemon/charizard')
+        axios.get('https://pokeapi.co/api/v2/pokemon/6')
             .then(response => {
                 this.setPokemon(response.data);
             })
@@ -58,8 +59,13 @@ class Pokedex extends React.Component {
     getAbilityDesc(ability) {
         axios.get(`https://pokeapi.co/api/v2/ability/${ability}`)
             .then(response => {
-                console.log(response.data.effect_entries[1].effect);
-                this.setState({ abilityDesc: response.data.effect_entries[1].effect });
+                /** append new ability (key, val) to abilities obj */
+                const abilities = this.state.pokemon.abilities;
+                abilities[ability] = response.data.effect_entries[1].effect;
+                /** update abilities state in pokemon */
+                const pokemon = {...this.state.pokemon};
+                pokemon.abilities = abilities;
+                this.setState({ pokemon });
             })
             .catch(error => {
                 console.log(error);
@@ -72,7 +78,8 @@ class Pokedex extends React.Component {
      */
     setPokemon(data) {
         const pokemon = {};
-        pokemon.abilities = this.getAbilities(data.abilities);
+        this.getAbilities(data.abilities);
+        pokemon.abilities = {};
         pokemon.height = data.height;
         pokemon.name = data.name;
         pokemon.sprite = data.sprites.front_default;
@@ -87,28 +94,13 @@ class Pokedex extends React.Component {
      * @param abilities array
      */
     getAbilities(abilities) {
+        /** filter out hidden abilities */
         const filteredAbilities = abilities.filter(ability => !ability.is_hidden);
+        /** extract a list of ability names */
         const keys = _.pluck(_.pluck(filteredAbilities, 'ability'), 'name');
-        console.log(keys);
-        // ARRAY ITERATORS DO NOT AWAIT A RESULT
-        /*const values = keys.map(ability =>
-            this.getAbilityDesc(ability)
-        );*/
-        const values = [];
-        for (const key of keys) {
+        keys.forEach(key => {
             this.getAbilityDesc(key);
-            setTimeout(() => {
-                //console.log(this.state.abilityDesc);
-                values.push(this.state.abilityDesc);
-                //console.log(values);
-            }, 100);
-        }
-        let retObj;
-        setTimeout(() => {
-            console.log(values)
-            retObj = _.object(keys, values)
-        }, 100);
-        return retObj;
+        })
     }
 
     /**
@@ -116,7 +108,9 @@ class Pokedex extends React.Component {
      * @param stats array
      */
     getStats(stats) {
+        /** extract a list of stat names */
         const keys = _.pluck(_.pluck(stats, 'stat'), 'name');
+        /** extract a list of base stats */
         const values = _.pluck(stats, 'base_stat');
         const statsObj = _.object(keys, values);
         return statsObj;
@@ -127,6 +121,7 @@ class Pokedex extends React.Component {
      * @param types array
      */
     getTypes(types) {
+        /** extract a list of type names */
         const filteredTypes = _.pluck(_.pluck(types, 'type'), 'name');
         return filteredTypes;
     }
