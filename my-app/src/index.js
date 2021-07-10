@@ -27,20 +27,18 @@ class Pokedex extends React.Component {
             pokemonList: [],
         };
         this.getPokemon = this.getPokemon.bind(this);
-        this.getPokemons = this.getPokemons.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
         this.getAbilityDesc = this.getAbilityDesc.bind(this);
         this.getAbilities = this.getAbilities.bind(this);
-        // this.getPokemonList = this.getPokemonList.bind(this);
+        this.getPokemonList = this.getPokemonList.bind(this);
     }
 
     /**
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon(6);
+        this.getPokemon(10220);
         this.getPokemonList();
-        //this.getAbilityDesc('blaze');
     }
 
     /**
@@ -58,29 +56,26 @@ class Pokedex extends React.Component {
     }
 
     /**
-     * get Pokemons
-     * @param name
+     * populate PokemonList w/ pokemon names
      */
-    getPokemons(name) {
-        axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+    getPokemonList() {
+        axios.get('https://pokeapi.co/api/v2/pokemon')
             .then(response => {
-                this.setState({
-                    pokemonList: [...this.state.pokemonList, response.data.name]
-                });
+                const limit = response.data.count;
+                // const limit = 100;
+                axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${limit}`)
+                    .then(response => {
+                        const results = response.data.results;
+                        const pokemonList = _.pluck(results, "name");
+                        this.setState({ pokemonList });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
             })
             .catch(error => {
                 console.log(error);
-            });
-    }
-
-    /**
-     * populate pokemon list w/ names
-     */
-    getPokemonList() {
-        /** TODO */
-        for (let i = 1; i <= 100; i++) {
-            this.getPokemons(i);
-        }
+            })
     }
 
     /**
@@ -92,7 +87,13 @@ class Pokedex extends React.Component {
             .then(response => {
                 /** append new ability (key, val) to abilities obj */
                 const abilities = this.state.pokemon.abilities;
-                abilities[ability] = response.data.effect_entries[1].effect;
+                try {
+                    abilities[ability] = response.data.effect_entries[1].effect
+                }
+                catch(error) {
+                    console.log(error);
+                    abilities[ability] = response.data.flavor_text_entries[0].flavor_text;
+                }
                 /** update abilities state in pokemon */
                 const pokemon = {...this.state.pokemon};
                 pokemon.abilities = abilities;
