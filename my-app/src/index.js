@@ -37,7 +37,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon(10220);
+        this.getPokemon(10003);
         this.getPokemonList();
     }
 
@@ -87,9 +87,12 @@ class Pokedex extends React.Component {
             .then(response => {
                 /** append new ability (key, val) to abilities obj */
                 const abilities = this.state.pokemon.abilities;
+                /** if effect entries is defined */
                 try {
-                    abilities[ability] = response.data.effect_entries[1].effect
+                    /** TODO: long description for effect? */
+                    abilities[ability] = response.data.effect_entries[1].short_effect
                 }
+                /** else */
                 catch(error) {
                     console.log(error);
                     abilities[ability] = response.data.flavor_text_entries[0].flavor_text;
