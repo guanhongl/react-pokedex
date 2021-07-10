@@ -27,17 +27,18 @@ class Pokedex extends React.Component {
             pokemonList: [],
         };
         this.getPokemon = this.getPokemon.bind(this);
+        this.getPokemons = this.getPokemons.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
         this.getAbilityDesc = this.getAbilityDesc.bind(this);
         this.getAbilities = this.getAbilities.bind(this);
-        this.getPokemonList = this.getPokemonList.bind(this);
+        // this.getPokemonList = this.getPokemonList.bind(this);
     }
 
     /**
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon(6, false);
+        this.getPokemon(6);
         this.getPokemonList();
         //this.getAbilityDesc('blaze');
     }
@@ -45,20 +46,27 @@ class Pokedex extends React.Component {
     /**
      * get Pokemon data
      * @param pokemon name
-     * @param boolean isGettingList
      */
-    getPokemon(name, isGettingList) {
+    getPokemon(name) {
         axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
             .then(response => {
-                if (isGettingList) {
-                    //console.log(response);
-                    this.setState({
-                        pokemonList: [...this.state.pokemonList, response.data.name]
-                    });
-                }
-                else {
-                    this.setPokemon(response.data);
-                }
+                this.setPokemon(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    /**
+     * get Pokemons
+     * @param name
+     */
+    getPokemons(name) {
+        axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+            .then(response => {
+                this.setState({
+                    pokemonList: [...this.state.pokemonList, response.data.name]
+                });
             })
             .catch(error => {
                 console.log(error);
@@ -71,7 +79,7 @@ class Pokedex extends React.Component {
     getPokemonList() {
         /** TODO */
         for (let i = 1; i <= 100; i++) {
-            this.getPokemon(i, true);
+            this.getPokemons(i);
         }
     }
 
