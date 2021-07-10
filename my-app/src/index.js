@@ -95,7 +95,9 @@ class Pokedex extends React.Component {
                 /** if effect entries is defined */
                 try {
                     /** TODO: long description for effect? */
-                    abilities[ability] = response.data.effect_entries[1].short_effect
+                    response.data.effect_entries[1].language.name === "en"
+                    ? abilities[ability] = response.data.effect_entries[1].short_effect
+                    : abilities[ability] = response.data.effect_entries[0].short_effect
                 }
                 /** else */
                 catch(error) {
