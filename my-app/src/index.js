@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Container, Header, Image } from 'semantic-ui-react';
+import { Container, Header, Image, Loader, Input, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -25,12 +25,17 @@ class Pokedex extends React.Component {
                 weight: NaN,
             },
             pokemonList: [],
+            isLoadingSingle: true,
+            isLoadingList: true,
+            searchQuery: '',
         };
         this.getPokemon = this.getPokemon.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
         this.getAbilityDesc = this.getAbilityDesc.bind(this);
         this.getAbilities = this.getAbilities.bind(this);
         this.getPokemonList = this.getPokemonList.bind(this);
+        this.handleSearchQuery = this.handleSearchQuery.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     /**
@@ -67,7 +72,7 @@ class Pokedex extends React.Component {
                     .then(response => {
                         const results = response.data.results;
                         const pokemonList = _.pluck(results, "name");
-                        this.setState({ pokemonList });
+                        this.setState({ pokemonList, isLoadingList: false });
                     })
                     .catch(error => {
                         console.log(error);
@@ -121,7 +126,7 @@ class Pokedex extends React.Component {
         pokemon.stats = this.getStats(data.stats);
         pokemon.types = this.getTypes(data.types);
         pokemon.weight = data.weight;
-        this.setState({ pokemon });
+        this.setState({ pokemon, isLoadingSingle: false });
     }
 
     /**
@@ -161,6 +166,14 @@ class Pokedex extends React.Component {
         return filteredTypes;
     }
 
+    handleSearchQuery(event, data) {
+        this.setState({ searchQuery: data.value });
+    }
+
+    handleSubmit() {
+        this.setState({ isLoadingSingle: true }, () => this.getPokemon(this.state.searchQuery));
+    }
+
     /**
      * render the pokedex
      * @returns {JSX.Element}
@@ -169,9 +182,50 @@ class Pokedex extends React.Component {
         const pokemon = this.state.pokemon;
 
         return (
-            <Container>
-                <Header as='h1'>{pokemon.name}</Header>
-                <Image src={pokemon.sprite}/>
+            <Container id='pokedex'>
+                {
+                    this.state.isLoadingSingle || this.state.isLoadingList ?
+                        <Loader
+                            active={this.state.isLoadingSingle || this.state.isLoadingList}
+                            inline='centered'
+                            content='Catching Pokemon...'
+                        />
+                        :
+                        <div>
+                            <Input
+                                placeholder='search by name...'
+                                value={this.state.searchQuery}
+                                onChange={(event, data) => this.handleSearchQuery(event, data)}
+                            />
+                            <Button onClick={this.handleSubmit}>Search</Button>
+                            <Header as='h1'>Name: {pokemon.name}</Header>
+                            <Image src={pokemon.sprite}/>
+                            <p>Height: {pokemon.height}</p>
+                            <p>Weight: {pokemon.weight}</p>
+                            Types:
+                            <ul>
+                                {
+                                    pokemon.types.map(type => <li key={type}>{type}</li>)
+                                }
+                            </ul>
+                            Abilities:
+                            <ul>
+                                {
+                                    Object.keys(pokemon.abilities).map(ability => {
+                                        return <li key={ability}>{ability}: {pokemon.abilities[ability]}</li>
+                                    })
+                                }
+                            </ul>
+                            Stats:
+                            <ul>
+                                {
+                                    Object.keys(pokemon.stats).map(stat => {
+                                        return <li key={stat}>{stat}: {pokemon.stats[stat]}</li>
+                                    })
+                                }
+                            </ul>
+                        </div>
+                }
             </Container>
         );
     }
