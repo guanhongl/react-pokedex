@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Container, Header, Image, Loader, Input, Button } from 'semantic-ui-react';
+import { Container, Header, Image, Loader, Search } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -27,6 +27,7 @@ class Pokedex extends React.Component {
             pokemonList: [],
             isLoadingSingle: true,
             isLoadingList: true,
+            searchResults: [],
             searchQuery: '',
         };
         this.getPokemon = this.getPokemon.bind(this);
@@ -34,8 +35,8 @@ class Pokedex extends React.Component {
         this.getAbilityDesc = this.getAbilityDesc.bind(this);
         this.getAbilities = this.getAbilities.bind(this);
         this.getPokemonList = this.getPokemonList.bind(this);
-        this.handleSearchQuery = this.handleSearchQuery.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.handleSearchSelect = this.handleSearchSelect.bind(this);
     }
 
     /**
@@ -166,11 +167,27 @@ class Pokedex extends React.Component {
         return filteredTypes;
     }
 
-    handleSearchQuery(event, data) {
-        this.setState({ searchQuery: data.value });
+    handleSearchChange(event, data) {
+        const value = data.value;
+        /** start search */
+        this.setState({ searchQuery: value });
+        /** clean query */
+        if (value.length === 0) {
+            this.setState({ searchResults: [], searchQuery: '' });
+        }
+        /** finish search */
+        else {
+            const filteredResults = ( this.state.pokemonList.filter(name => name.includes(value.toLowerCase())) ).map(elem => ({
+                childKey: elem,
+                id: elem,
+                title: elem,
+            }) );
+            this.setState({ searchResults: filteredResults });
+        }
     }
 
-    handleSubmit() {
+    handleSearchSelect(event, data) {
+        this.setState({ searchQuery: data.result.title });
         this.setState({ isLoadingSingle: true }, () => this.getPokemon(this.state.searchQuery));
     }
 
@@ -192,12 +209,15 @@ class Pokedex extends React.Component {
                         />
                         :
                         <div>
-                            <Input
-                                placeholder='search by name...'
+                            <Search
+                                loading={false}
+                                onResultSelect={(event, data) => this.handleSearchSelect(event, data)}
+                                onSearchChange={(event, data) => this.handleSearchChange(event, data)}
+                                results={this.state.searchResults}
                                 value={this.state.searchQuery}
-                                onChange={(event, data) => this.handleSearchQuery(event, data)}
+                                placeholder='Search for Pokemon...'
+                                noResultsMessage='No Pokemon found.'
                             />
-                            <Button onClick={this.handleSubmit}>Search</Button>
                             <Header as='h1'>Name: {pokemon.name}</Header>
                             <Image src={pokemon.sprite}/>
                             <p>Height: {pokemon.height}</p>

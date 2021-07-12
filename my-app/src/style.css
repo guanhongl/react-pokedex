@@ -1,5 +1,9 @@
 #pokedex {
   margin-top: 50px;
 }
+#pokedex .ui.search > .results {
+  max-height: 200px;
+  overflow-y: auto;
+}
 
 /*# sourceMappingURL=style.css.map */
