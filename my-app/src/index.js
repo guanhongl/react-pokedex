@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Container, Header, Image, Loader, Search } from 'semantic-ui-react';
+import { Container, Dropdown, Header, Image, Loader, Search } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -14,6 +14,7 @@ class Pokedex extends React.Component {
         super(props);
         this.state = {
             pokemon: {
+                id: NaN,
                 abilities: {},
                 /** height in decimetres */
                 height: NaN,
@@ -23,6 +24,9 @@ class Pokedex extends React.Component {
                 types: [],
                 /** weight in hectograms */
                 weight: NaN,
+                forms: [],
+                /** TODO: evolutions */
+                /** TODO: pokemon info. (pokemon-species/{id or name} -> flavor_text_entries) */
             },
             pokemonList: [],
             isLoadingSingle: true,
@@ -34,22 +38,25 @@ class Pokedex extends React.Component {
         this.setPokemon = this.setPokemon.bind(this);
         this.getAbilityDesc = this.getAbilityDesc.bind(this);
         this.getAbilities = this.getAbilities.bind(this);
+        this.getForms = this.getForms.bind(this);
         this.getPokemonList = this.getPokemonList.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.handleSearchSelect = this.handleSearchSelect.bind(this);
+        this.handleDropdown = this.handleDropdown.bind(this);
     }
 
     /**
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon(10003);
+        this.getPokemon(291);
         this.getPokemonList();
     }
 
     /**
      * get Pokemon data
      * @param pokemon name
+     * TODO: change to param id?
      */
     getPokemon(name) {
         axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
@@ -65,7 +72,7 @@ class Pokedex extends React.Component {
      * populate PokemonList w/ pokemon names
      */
     getPokemonList() {
-        axios.get('https://pokeapi.co/api/v2/pokemon')
+        axios.get('https://pokeapi.co/api/v2/pokemon-species')
             .then(response => {
                 const limit = response.data.count;
                 // const limit = 100;
@@ -122,6 +129,9 @@ class Pokedex extends React.Component {
     setPokemon(data) {
         const pokemon = {};
         this.getAbilities(data.abilities);
+        this.getForms(data.species.name, data.is_default);
+
+        pokemon.id = data.id;
         pokemon.abilities = {};
         pokemon.height = data.height;
         pokemon.name = data.name;
@@ -129,6 +139,7 @@ class Pokedex extends React.Component {
         pokemon.stats = this.getStats(data.stats);
         pokemon.types = this.getTypes(data.types);
         pokemon.weight = data.weight;
+        pokemon.forms = [];
         this.setState({ pokemon, isLoadingSingle: false });
     }
 
@@ -169,6 +180,24 @@ class Pokedex extends React.Component {
         return filteredTypes;
     }
 
+    /**
+     * get forms by name
+     * @param name
+     */
+    getForms(name, isDefault) {
+        axios.get(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
+            .then(response => {
+                /** extract a list of form names */
+                const varieties = _.pluck(_.pluck(response.data.varieties, "pokemon"), "name");
+                const pokemon = { ...this.state.pokemon };
+                pokemon.forms = varieties;
+                this.setState({ pokemon });
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
     handleSearchChange(event, data) {
         const value = data.value;
         /** start search */
@@ -191,6 +220,12 @@ class Pokedex extends React.Component {
     handleSearchSelect(event, data) {
         this.setState({ searchQuery: data.result.title });
         this.setState({ isLoadingSingle: true }, () => this.getPokemon(this.state.searchQuery));
+    }
+
+    handleDropdown(event, data) {
+        if (data.value !== this.state.pokemon.name) {
+            this.setState({ isLoadingSingle: true }, () => this.getPokemon(data.value));
+        }
     }
 
     /**
@@ -219,6 +254,16 @@ class Pokedex extends React.Component {
                                 value={this.state.searchQuery}
                                 placeholder='Search for Pokemon...'
                                 noResultsMessage='No Pokemon found.'
+                            />
+                            <Dropdown
+                                placeholder='Select a form...'
+                                selection
+                                options={pokemon.forms.map(form => ({
+                                   key: form,
+                                   text: form,
+                                   value: form
+                                }) )}
+                                onChange={(event, data) => this.handleDropdown(event, data)}
                             />
                             <Header as='h1'>Name: {pokemon.name}</Header>
                             <Image src={pokemon.sprite}/>
