@@ -33,6 +33,8 @@ class Pokedex extends React.Component {
             isLoadingList: true,
             searchResults: [],
             searchQuery: '',
+            /** TODO: previous button */
+            prevPokemon: NaN,
         };
         this.getPokemon = this.getPokemon.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
@@ -51,6 +53,18 @@ class Pokedex extends React.Component {
     componentDidMount() {
         this.getPokemon(291);
         this.getPokemonList();
+    }
+
+    /**
+     * fires on state change
+     * @param prevProps
+     * @param prevState
+     */
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.pokemon.id !== this.state.pokemon.id) {
+            console.log('id changed!')
+            this.setState({ prevPokemon: prevState.pokemon.id });
+        }
     }
 
     /**
