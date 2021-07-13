@@ -25,7 +25,7 @@ class Pokedex extends React.Component {
                 /** weight in hectograms */
                 weight: NaN,
                 forms: [],
-                /** TODO: evolutions */
+                evolutions: [],
                 /** TODO: pokemon info. (pokemon-species/{id or name} -> flavor_text_entries) */
             },
             pokemonList: [],
@@ -41,6 +41,7 @@ class Pokedex extends React.Component {
         this.getAbilityDesc = this.getAbilityDesc.bind(this);
         this.getAbilities = this.getAbilities.bind(this);
         this.getForms = this.getForms.bind(this);
+        this.getEvolutions = this.getEvolutions.bind(this);
         this.getPokemonList = this.getPokemonList.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.handleSearchSelect = this.handleSearchSelect.bind(this);
@@ -51,7 +52,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon(291);
+        this.getPokemon(1);
         this.getPokemonList();
     }
 
@@ -63,14 +64,14 @@ class Pokedex extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.pokemon.id !== this.state.pokemon.id) {
             console.log('id changed!')
-            this.setState({ prevPokemon: prevState.pokemon.id });
+            // this.setState({ prevPokemon: prevState.pokemon.id });
         }
     }
 
     /**
      * get Pokemon data
      * @param pokemon name
-     * TODO: change to param id?
+     * TODO: change to param id? (make /pokemon-species/ the base)
      */
     getPokemon(name) {
         axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
@@ -86,7 +87,7 @@ class Pokedex extends React.Component {
      * populate PokemonList w/ pokemon names
      */
     getPokemonList() {
-        axios.get('https://pokeapi.co/api/v2/pokemon-species')
+        axios.get('https://pokeapi.co/api/v2/pokemon-species/')
             .then(response => {
                 const limit = response.data.count;
                 // const limit = 100;
@@ -98,11 +99,11 @@ class Pokedex extends React.Component {
                     })
                     .catch(error => {
                         console.log(error);
-                    })
+                    });
             })
             .catch(error => {
                 console.log(error);
-            })
+            });
     }
 
     /**
@@ -143,7 +144,8 @@ class Pokedex extends React.Component {
     setPokemon(data) {
         const pokemon = {};
         this.getAbilities(data.abilities);
-        this.getForms(data.species.name, data.is_default);
+        this.getForms(data.species.url);
+        this.getEvolutions(data.species.url);
 
         pokemon.id = data.id;
         pokemon.abilities = {};
@@ -154,6 +156,7 @@ class Pokedex extends React.Component {
         pokemon.types = this.getTypes(data.types);
         pokemon.weight = data.weight;
         pokemon.forms = [];
+        pokemon.evolutions = [];
         this.setState({ pokemon, isLoadingSingle: false });
     }
 
@@ -195,11 +198,11 @@ class Pokedex extends React.Component {
     }
 
     /**
-     * get forms by name
-     * @param name
+     * get forms by url
+     * @param url
      */
-    getForms(name, isDefault) {
-        axios.get(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
+    getForms(url) {
+        axios.get(url)
             .then(response => {
                 /** extract a list of form names */
                 const varieties = _.pluck(_.pluck(response.data.varieties, "pokemon"), "name");
@@ -209,7 +212,62 @@ class Pokedex extends React.Component {
             })
             .catch(error => {
                 console.log(error);
+            });
+    }
+
+    getEvolutions(url) {
+        axios.get(url)
+            .then( response => {
+                axios.get(response.data.evolution_chain.url)
+                    .then(response => {
+                        const chain = response.data.chain;
+                        /** if there are evolutions */
+                        if (chain.evolves_to.length > 0) {
+                            const evolutions = [chain.species.name];
+                            // let current = chain.evolves_to;
+                            // while (current.length > 0) {
+                            //     if (current.length > 1) {
+                            //         const branch = [];
+                            //         current.forEach(elem => {
+                            //             branch.push(elem.species.name);
+                            //         });
+                            //         evolutions.push(branch);
+                            //         // return;
+                            //     }
+                            //     else {
+                            //         evolutions.push(current[0].species.name);
+                            //     }
+                            //     current = current[0].evolves_to;
+                            // }
+                            /** TODO: clone nested object array */
+                            const stack = [];
+
+                            console.log(stack)
+                            while (stack.length > 0) {
+                                if (stack[0].length > 1) {
+                                    const branch = [];
+                                    stack[0].forEach(elem => {
+                                        branch.push(elem.species.name);
+                                        stack.push(elem.evolves_to);
+                                    });
+                                    evolutions.push(branch);
+                                }
+                                else {
+                                    evolutions.push(stack[0].species.name);
+                                    stack.push(stack[0].evolves_to);
+                                }
+                                stack.shift();
+                            }
+                            console.log(evolutions)
+                        }
+                    })
+                    .catch(error => {
+                       console.log(error);
+                    });
             })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     handleSearchChange(event, data) {
