@@ -30,6 +30,9 @@ class Pokedex extends React.Component {
             },
             pokemonList: [],
             isLoadingSingle: true,
+            isLoadingAbilities: true,
+            isLoadingForms: true,
+            isLoadingEvolutions: true,
             isLoadingList: true,
             searchResults: [],
             searchQuery: '',
@@ -130,7 +133,7 @@ class Pokedex extends React.Component {
                 /** update abilities state in pokemon */
                 const pokemon = {...this.state.pokemon};
                 pokemon.abilities = abilities;
-                this.setState({ pokemon });
+                this.setState({ pokemon, isLoadingAbilities: false });
             })
             .catch(error => {
                 console.log(error);
@@ -143,9 +146,9 @@ class Pokedex extends React.Component {
      */
     setPokemon(data) {
         const pokemon = {};
-        this.getAbilities(data.abilities);
-        this.getForms(data.species.url);
-        this.getEvolutions(data.species.url);
+        this.setState({ isLoadingAbilities: true }, this.getAbilities(data.abilities));
+        this.setState({ isLoadingForms: true }, this.getForms(data.species.url));
+        this.setState({ isLoadingEvolutions: true }, this.getEvolutions(data.species.url));
 
         pokemon.id = data.id;
         pokemon.abilities = {};
@@ -170,8 +173,10 @@ class Pokedex extends React.Component {
         /** extract a list of ability names */
         const keys = _.pluck(_.pluck(filteredAbilities, 'ability'), 'name');
         keys.forEach(key => {
-            this.getAbilityDesc(key);
-        })
+            this.setState({ isLoadingAbilities: true }, this.getAbilityDesc(key));
+        });
+        /** TODO: fix */
+        // this.setState({ isLoadingAbilities: false });
     }
 
     /**
@@ -208,7 +213,7 @@ class Pokedex extends React.Component {
                 const varieties = _.pluck(_.pluck(response.data.varieties, "pokemon"), "name");
                 const pokemon = { ...this.state.pokemon };
                 pokemon.forms = varieties;
-                this.setState({ pokemon });
+                this.setState({ pokemon, isLoadingForms: false });
             })
             .catch(error => {
                 console.log(error);
@@ -242,7 +247,7 @@ class Pokedex extends React.Component {
 
                             const pokemon = {...this.state.pokemon};
                             pokemon.evolutions = evolutions;
-                            this.setState({ pokemon });
+                            this.setState({ pokemon, isLoadingEvolutions: false });
                         }
                     })
                     .catch(error => {
@@ -290,13 +295,15 @@ class Pokedex extends React.Component {
      */
     render() {
         const pokemon = this.state.pokemon;
+        const IS_LOADING = this.state.isLoadingSingle || this.state.isLoadingList || this.state.isLoadingAbilities ||
+                           this.state.isLoadingForms || this.state.isLoadingEvolutions;
 
         return (
             <Container id='pokedex'>
                 {
-                    this.state.isLoadingSingle || this.state.isLoadingList ?
+                    IS_LOADING ?
                         <Loader
-                            active={this.state.isLoadingSingle || this.state.isLoadingList}
+                            active={IS_LOADING}
                             inline='centered'
                             content='Catching Pokemon...'
                         />
