@@ -52,7 +52,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon(1);
+        this.getPokemon('slowpoke');
         this.getPokemonList();
     }
 
@@ -223,42 +223,26 @@ class Pokedex extends React.Component {
                         const chain = response.data.chain;
                         /** if there are evolutions */
                         if (chain.evolves_to.length > 0) {
+                            /** initialize evolutions array w/ base pokemon */
                             const evolutions = [chain.species.name];
-                            // let current = chain.evolves_to;
-                            // while (current.length > 0) {
-                            //     if (current.length > 1) {
-                            //         const branch = [];
-                            //         current.forEach(elem => {
-                            //             branch.push(elem.species.name);
-                            //         });
-                            //         evolutions.push(branch);
-                            //         // return;
-                            //     }
-                            //     else {
-                            //         evolutions.push(current[0].species.name);
-                            //     }
-                            //     current = current[0].evolves_to;
-                            // }
-                            /** TODO: clone nested object array */
-                            const stack = [];
-
-                            console.log(stack)
+                            /** initialize stack w/ evolves_to objects */
+                            let stack = [...chain.evolves_to];
+                            /** while STACK is not empty */
                             while (stack.length > 0) {
-                                if (stack[0].length > 1) {
-                                    const branch = [];
-                                    stack[0].forEach(elem => {
-                                        branch.push(elem.species.name);
-                                        stack.push(elem.evolves_to);
-                                    });
-                                    evolutions.push(branch);
+                                /** if stack[0] has evolutions */
+                                if (stack[0].evolves_to.length > 0) {
+                                    /** push evolves_to objects to STACK */
+                                    stack = [...stack, ...stack[0].evolves_to];
                                 }
-                                else {
-                                    evolutions.push(stack[0].species.name);
-                                    stack.push(stack[0].evolves_to);
-                                }
+                                /** add evolution */
+                                evolutions.push(stack[0].species.name);
+                                /** pop STACK */
                                 stack.shift();
                             }
-                            console.log(evolutions)
+
+                            const pokemon = {...this.state.pokemon};
+                            pokemon.evolutions = evolutions;
+                            this.setState({ pokemon });
                         }
                     })
                     .catch(error => {
