@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Button, Container, Dropdown, Grid, Header, Image, Loader, Search } from 'semantic-ui-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -289,6 +290,10 @@ class Pokedex extends React.Component {
      */
     render() {
         const pokemon = this.state.pokemon;
+        const graphData = Object.keys(pokemon.stats).map(stat => ({
+            name: `${stat} (${pokemon.stats[stat]})`,
+            value: pokemon.stats[stat]
+        }));
 
         return (
             <Container id='pokedex'>
@@ -300,10 +305,13 @@ class Pokedex extends React.Component {
                             content='Catching Pokemon...'
                         />
                         :
-                        <Grid>
-                            <Grid.Row columns={2}>
+                        <Grid stackable>
+                            <Grid.Row columns={3}>
+                                <Grid.Column></Grid.Column>
                                 <Grid.Column>
                                     <Search
+                                        fluid
+                                        input={{fluid: true}}
                                         loading={false}
                                         onResultSelect={(event, data) => this.handleSearchSelect(event, data)}
                                         onSearchChange={(event, data) => this.handleSearchChange(event, data)}
@@ -313,7 +321,7 @@ class Pokedex extends React.Component {
                                         noResultsMessage='No Pokemon found.'
                                     />
                                 </Grid.Column>
-                                <Grid.Column>
+                                <Grid.Column textAlign={'right'}>
                                     <Dropdown
                                         placeholder='Select a form...'
                                         selection
@@ -329,31 +337,37 @@ class Pokedex extends React.Component {
                             <Grid.Row columns={2}>
                                 <Grid.Column>
                                     <div className='card'>
+                                        {/** sprite */}
                                         <Image src={pokemon.sprite} centered size='small' />
+                                        {/** name + id */}
                                         <Header as='h2' className='card-header'>
                                             {pokemon.name} #{pokemon.id}
                                             <Header.Subheader>
-                                                {pokemon.height/10}m | {pokemon.weight/10}kg
+                                                {pokemon.height/10}m | {pokemon.weight !== 10000 ? pokemon.weight/10 : '???'}kg
                                             </Header.Subheader>
                                         </Header>
+                                        {/** type */}
                                         <div>
                                             {
                                                 pokemon.types.map(type => {
                                                     return (<Button
                                                                 size={'mini'}
                                                                 className={`type-button ${type}`}
+                                                                key={type}
                                                             >
                                                                 {type.toUpperCase()}
                                                             </Button>);
                                                 })
                                             }
                                         </div>
+                                        {/** ability */}
                                         <div>
                                             {
                                                 Object.keys(pokemon.abilities).map(ability => {
                                                     return (<Button
                                                                 size={'mini'}
                                                                 className='ability-button'
+                                                                key={ability}
                                                             >
                                                                 {ability.toUpperCase()}
                                                             </Button>);
@@ -361,6 +375,28 @@ class Pokedex extends React.Component {
                                             }
                                         </div>
                                     </div>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    {/** stats */}
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart
+                                            className='bar-chart'
+                                            data={graphData}
+                                            layout='vertical'
+                                            barSize={15}
+                                        >
+                                            <XAxis hide type='number' />
+                                            <YAxis
+                                                dataKey='name'
+                                                type='category'
+                                                axisLine={false}
+                                                tickLine={false}
+                                                width={150}
+                                                padding={{top: 30, bottom: 30}}
+                                            />
+                                            <Bar dataKey="value" fill="#f5f5f5" radius={[10, 10, 10, 10]} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
                                 </Grid.Column>
                             </Grid.Row>
                             {/*<Header as='h1'>Name: {pokemon.name}</Header>*/}
