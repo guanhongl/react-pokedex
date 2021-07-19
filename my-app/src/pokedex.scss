@@ -1,13 +1,129 @@
+$normal: #A8A77A;
+$fire: #EE8130;
+$water: #6390F0;
+$electric: #F7D02C;
+$grass: #7AC74C;
+$ice: #96D9D6;
+$fighting: #C22E28;
+$poison: #A33EA1;
+$ground: #E2BF65;
+$flying: #A98FF3;
+$psychic: #F95587;
+$bug: #A6B91A;
+$rock: #B6A136;
+$ghost: #735797;
+$dragon: #6F35FC;
+$dark: #705746;
+$steel: #B7B7CE;
+$fairy: #D685AD;
+
 body {
   height: fit-content !important;
 }
 
+.normal {
+  background-color: $normal !important;
+}
+
+.fire {
+  background-color: $fire !important;
+}
+
+.water {
+  background-color: $water !important;
+}
+
+.electric {
+  background-color: $electric !important;
+}
+
+.grass {
+  background-color: $grass !important;
+}
+
+.ice {
+  background-color: $ice !important;
+}
+
+.fighting {
+  background-color: $fighting !important;
+}
+
+.poison {
+  background-color: $poison !important;
+}
+
+.ground {
+  background-color: $ground !important;
+}
+
+.flying {
+  background-color: $flying !important;
+}
+
+.psychic {
+  background-color: $psychic !important;
+}
+
+.bug {
+  background-color: $bug !important;
+}
+
+.rock {
+  background-color: $rock !important;
+}
+
+.ghost {
+  background-color: $ghost !important;
+}
+
+.dragon {
+  background-color: $dragon !important;
+}
+
+.dark {
+  background-color: $dark !important;
+}
+
+.steel {
+  background-color: $steel !important;
+}
+
+.fairy {
+  background-color: $fairy !important;
+}
+
 #pokedex {
   margin-top: 50px;
+  margin-bottom: 50px;
 
   .ui.search > .results {
     max-height: 200px;
     overflow-y: auto;
+  }
+
+  .card {
+    text-align: center;
+    background-color: lightgrey;
+    border-radius: 20px;
+    padding-top: 10px;
+    padding-bottom: 15px;
+
+    .card-header {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .type-button {
+      cursor: unset;
+      width: 90px;
+    }
+
+    .ability-button {
+      background-color: inherit;
+      font-size: 12px;
+    }
+
   }
 }
 

@@ -2,12 +2,104 @@ body {
   height: fit-content !important;
 }
 
+.normal {
+  background-color: #A8A77A !important;
+}
+
+.fire {
+  background-color: #EE8130 !important;
+}
+
+.water {
+  background-color: #6390F0 !important;
+}
+
+.electric {
+  background-color: #F7D02C !important;
+}
+
+.grass {
+  background-color: #7AC74C !important;
+}
+
+.ice {
+  background-color: #96D9D6 !important;
+}
+
+.fighting {
+  background-color: #C22E28 !important;
+}
+
+.poison {
+  background-color: #A33EA1 !important;
+}
+
+.ground {
+  background-color: #E2BF65 !important;
+}
+
+.flying {
+  background-color: #A98FF3 !important;
+}
+
+.psychic {
+  background-color: #F95587 !important;
+}
+
+.bug {
+  background-color: #A6B91A !important;
+}
+
+.rock {
+  background-color: #B6A136 !important;
+}
+
+.ghost {
+  background-color: #735797 !important;
+}
+
+.dragon {
+  background-color: #6F35FC !important;
+}
+
+.dark {
+  background-color: #705746 !important;
+}
+
+.steel {
+  background-color: #B7B7CE !important;
+}
+
+.fairy {
+  background-color: #D685AD !important;
+}
+
 #pokedex {
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 #pokedex .ui.search > .results {
   max-height: 200px;
   overflow-y: auto;
+}
+#pokedex .card {
+  text-align: center;
+  background-color: lightgrey;
+  border-radius: 20px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
+#pokedex .card .card-header {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+#pokedex .card .type-button {
+  cursor: unset;
+  width: 90px;
+}
+#pokedex .card .ability-button {
+  background-color: inherit;
+  font-size: 12px;
 }
 
 #top-menu #menu-header {

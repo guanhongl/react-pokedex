@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Container, Dropdown, Header, Image, Loader, Search } from 'semantic-ui-react';
+import { Button, Container, Dropdown, Grid, Header, Image, Loader, Search } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -51,7 +51,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon('slowpoke');
+        this.getPokemon('ludicolo');
         this.getPokemonList();
     }
 
@@ -300,53 +300,96 @@ class Pokedex extends React.Component {
                             content='Catching Pokemon...'
                         />
                         :
-                        <div>
-                            <Search
-                                loading={false}
-                                onResultSelect={(event, data) => this.handleSearchSelect(event, data)}
-                                onSearchChange={(event, data) => this.handleSearchChange(event, data)}
-                                results={this.state.searchResults}
-                                value={this.state.searchQuery}
-                                placeholder='Search for Pokemon...'
-                                noResultsMessage='No Pokemon found.'
-                            />
-                            <Dropdown
-                                placeholder='Select a form...'
-                                selection
-                                options={pokemon.forms.map(form => ({
-                                    key: form,
-                                    text: form,
-                                    value: form
-                                }) )}
-                                onChange={(event, data) => this.handleDropdown(event, data)}
-                            />
-                            <Header as='h1'>Name: {pokemon.name}</Header>
-                            <Image src={pokemon.sprite}/>
-                            <p>Height: {pokemon.height}</p>
-                            <p>Weight: {pokemon.weight}</p>
-                            Types:
-                            <ul>
-                                {
-                                    pokemon.types.map(type => <li key={type}>{type}</li>)
-                                }
-                            </ul>
-                            Abilities:
-                            <ul>
-                                {
-                                    Object.keys(pokemon.abilities).map(ability => {
-                                        return <li key={ability}>{ability}: {pokemon.abilities[ability]}</li>
-                                    })
-                                }
-                            </ul>
-                            Stats:
-                            <ul>
-                                {
-                                    Object.keys(pokemon.stats).map(stat => {
-                                        return <li key={stat}>{stat}: {pokemon.stats[stat]}</li>
-                                    })
-                                }
-                            </ul>
-                        </div>
+                        <Grid>
+                            <Grid.Row columns={2}>
+                                <Grid.Column>
+                                    <Search
+                                        loading={false}
+                                        onResultSelect={(event, data) => this.handleSearchSelect(event, data)}
+                                        onSearchChange={(event, data) => this.handleSearchChange(event, data)}
+                                        results={this.state.searchResults}
+                                        value={this.state.searchQuery}
+                                        placeholder='Search for Pokemon...'
+                                        noResultsMessage='No Pokemon found.'
+                                    />
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Dropdown
+                                        placeholder='Select a form...'
+                                        selection
+                                        options={pokemon.forms.map(form => ({
+                                            key: form,
+                                            text: form,
+                                            value: form
+                                        }) )}
+                                        onChange={(event, data) => this.handleDropdown(event, data)}
+                                    />
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row columns={2}>
+                                <Grid.Column>
+                                    <div className='card'>
+                                        <Image src={pokemon.sprite} centered size='small' />
+                                        <Header as='h2' className='card-header'>
+                                            {pokemon.name} #{pokemon.id}
+                                            <Header.Subheader>
+                                                {pokemon.height/10}m | {pokemon.weight/10}kg
+                                            </Header.Subheader>
+                                        </Header>
+                                        <div>
+                                            {
+                                                pokemon.types.map(type => {
+                                                    return (<Button
+                                                                size={'mini'}
+                                                                className={`type-button ${type}`}
+                                                            >
+                                                                {type.toUpperCase()}
+                                                            </Button>);
+                                                })
+                                            }
+                                        </div>
+                                        <div>
+                                            {
+                                                Object.keys(pokemon.abilities).map(ability => {
+                                                    return (<Button
+                                                                size={'mini'}
+                                                                className='ability-button'
+                                                            >
+                                                                {ability.toUpperCase()}
+                                                            </Button>);
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                </Grid.Column>
+                            </Grid.Row>
+                            {/*<Header as='h1'>Name: {pokemon.name}</Header>*/}
+                            {/*<Image src={pokemon.sprite}/>*/}
+                            {/*<p>Height: {pokemon.height}</p>*/}
+                            {/*<p>Weight: {pokemon.weight}</p>*/}
+                            {/*Types:*/}
+                            {/*<ul>*/}
+                            {/*    {*/}
+                            {/*        pokemon.types.map(type => <li key={type}>{type}</li>)*/}
+                            {/*    }*/}
+                            {/*</ul>*/}
+                            {/*Abilities:*/}
+                            {/*<ul>*/}
+                            {/*    {*/}
+                            {/*        Object.keys(pokemon.abilities).map(ability => {*/}
+                            {/*            return <li key={ability}>{ability}: {pokemon.abilities[ability]}</li>*/}
+                            {/*        })*/}
+                            {/*    }*/}
+                            {/*</ul>*/}
+                            {/*Stats:*/}
+                            {/*<ul>*/}
+                            {/*    {*/}
+                            {/*        Object.keys(pokemon.stats).map(stat => {*/}
+                            {/*            return <li key={stat}>{stat}: {pokemon.stats[stat]}</li>*/}
+                            {/*        })*/}
+                            {/*    }*/}
+                            {/*</ul>*/}
+                        </Grid>
                 }
             </Container>
         );
