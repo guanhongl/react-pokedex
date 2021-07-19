@@ -10,4 +10,13 @@ body {
   overflow-y: auto;
 }
 
+#top-menu #menu-header {
+  font-weight: bold;
+}
+#top-menu .item {
+  height: 50px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 /*# sourceMappingURL=style.css.map */
