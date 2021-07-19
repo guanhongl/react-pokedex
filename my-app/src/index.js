@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Pokedex from './pokedex.jsx';
 import TopMenu from './topmenu';
+import Footer from './footer';
 
 class App extends React.Component {
     render() {
@@ -9,6 +10,7 @@ class App extends React.Component {
           <div>
               <TopMenu />
               <Pokedex />
+              <Footer />
           </div>
         );
     }
