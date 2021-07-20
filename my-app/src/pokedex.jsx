@@ -2,7 +2,7 @@ import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Button, Container, Dropdown, Grid, Header, Image, Loader, Search } from 'semantic-ui-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -284,6 +284,22 @@ class Pokedex extends React.Component {
         }
     }
 
+    /** https://www.schemecolor.com/red-orange-green-gradient.php */
+    fillBar(value) {
+        if (value <= 50) {
+            return '#FF0D0D';
+        }
+        if (value <= 100) {
+            return '#FF8E15';
+        }
+        if (value <= 150) {
+            return '#FAB733';
+        }
+        else {
+            return '#69B34C';
+        }
+    }
+
     /**
      * render the pokedex
      * @returns {JSX.Element}
@@ -394,7 +410,13 @@ class Pokedex extends React.Component {
                                                 width={150}
                                                 padding={{top: 30, bottom: 30}}
                                             />
-                                            <Bar dataKey="value" fill="#f5f5f5" radius={[10, 10, 10, 10]} />
+                                            <Bar dataKey="value" radius={[10, 10, 10, 10]}>
+                                                {
+                                                    graphData.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={this.fillBar(entry.value)} />
+                                                    ))
+                                                }
+                                            </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </Grid.Column>
