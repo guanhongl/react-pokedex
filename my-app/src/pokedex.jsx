@@ -224,7 +224,10 @@ class Pokedex extends React.Component {
                         /** if there are evolutions */
                         if (chain.evolves_to.length > 0) {
                             /** initialize evolutions array w/ base pokemon */
-                            const evolutions = [chain.species.name];
+                            const evolutions = [{ [chain.species.name] : 0 }];
+
+                            let i = 1;
+
                             /** initialize stack w/ evolves_to objects */
                             let stack = [...chain.evolves_to];
                             /** while STACK is not empty */
@@ -235,7 +238,12 @@ class Pokedex extends React.Component {
                                     stack = [...stack, ...stack[0].evolves_to];
                                 }
                                 /** add evolution */
-                                evolutions.push(stack[0].species.name);
+                                evolutions.push({ [stack[0].species.name] : i });
+
+                                if (stack[0].evolves_to.length > 0) {
+                                    i++;
+                                }
+
                                 /** pop STACK */
                                 stack.shift();
                             }
