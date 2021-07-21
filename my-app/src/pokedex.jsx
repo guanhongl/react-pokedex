@@ -223,29 +223,33 @@ class Pokedex extends React.Component {
                         const chain = response.data.chain;
                         /** if there are evolutions */
                         if (chain.evolves_to.length > 0) {
-                            /** initialize evolutions array w/ base pokemon */
+                            /** initialize evolutions array w/ base pokemon + stage = 0 */
                             const evolutions = [{ [chain.species.name] : 0 }];
 
-                            let i = 1;
+                            let index = 1; // the loop index
+                            let stage = 1; // the evolution stage #
+                            let stage2Start = 0; // the start index of stage 2 evolutions
 
-                            /** initialize stack w/ evolves_to objects */
+                            /** initialize STACK w/ evolves_to objects */
                             let stack = [...chain.evolves_to];
                             /** while STACK is not empty */
                             while (stack.length > 0) {
-                                /** if stack[0] has evolutions */
+                                /** if TOP of STACK has evolutions */
                                 if (stack[0].evolves_to.length > 0) {
+                                    /** record start index of stage 2 evolutions */
+                                    stage2Start = stage2Start ? stage2Start : stack.length + 1;
                                     /** push evolves_to objects to STACK */
                                     stack = [...stack, ...stack[0].evolves_to];
                                 }
-                                /** add evolution */
-                                evolutions.push({ [stack[0].species.name] : i });
-
-                                if (stack[0].evolves_to.length > 0) {
-                                    i++;
-                                }
-
+                                /** add evolution + stage */
+                                evolutions.push({ [stack[0].species.name] : stage });
                                 /** pop STACK */
                                 stack.shift();
+                                index++;
+                                /** if loop index = stage2Start, increment stage */
+                                if (index === stage2Start) {
+                                    stage++;
+                                }
                             }
 
                             const pokemon = {...this.state.pokemon};
@@ -294,13 +298,13 @@ class Pokedex extends React.Component {
 
     /** https://www.schemecolor.com/red-orange-green-gradient.php */
     fillBar(value) {
-        if (value <= 50) {
+        if (value < 50) {
             return '#FF0D0D';
         }
-        if (value <= 100) {
+        if (value < 100) {
             return '#FF8E15';
         }
-        if (value <= 150) {
+        if (value < 150) {
             return '#FAB733';
         }
         else {
