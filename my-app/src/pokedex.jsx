@@ -350,16 +350,19 @@ class Pokedex extends React.Component {
                                     />
                                 </Grid.Column>
                                 <Grid.Column textAlign={'right'}>
-                                    <Dropdown
-                                        placeholder='Select a form...'
-                                        selection
-                                        options={pokemon.forms.map(form => ({
-                                            key: form,
-                                            text: form,
-                                            value: form
-                                        }) )}
-                                        onChange={(event, data) => this.handleDropdown(event, data)}
-                                    />
+                                    {
+                                        pokemon.forms.length > 1 &&
+                                        <Dropdown
+                                            placeholder='Select a form...'
+                                            selection
+                                            options={pokemon.forms.map(form => ({
+                                                key: form,
+                                                text: form,
+                                                value: form
+                                            }))}
+                                            onChange={(event, data) => this.handleDropdown(event, data)}
+                                        />
+                                    }
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row columns={2}>
