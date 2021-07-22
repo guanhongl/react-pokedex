@@ -223,35 +223,62 @@ class Pokedex extends React.Component {
                         const chain = response.data.chain;
                         /** if there are evolutions */
                         if (chain.evolves_to.length > 0) {
-                            /** initialize evolutions array w/ base pokemon + stage = 0 */
-                            const evolutions = [{ [chain.species.name] : 0 }];
+                            // /** initialize evolutions array w/ base pokemon + stage = 0 */
+                            // const evolutions = [{ [chain.species.name] : 0 }];
+                            //
+                            // let index = 1; // the loop index
+                            // let stage = 1; // the evolution stage #
+                            // let stage2Start = 0; // the start index of stage 2 evolutions
+                            //
+                            // /** initialize STACK w/ evolves_to objects */
+                            // let stack = [...chain.evolves_to];
+                            // /** while STACK is not empty */
+                            // while (stack.length > 0) {
+                            //     /** if TOP of STACK has evolutions */
+                            //     if (stack[0].evolves_to.length > 0) {
+                            //         /** record start index of stage 2 evolutions */
+                            //         stage2Start = stage2Start ? stage2Start : stack.length + 1;
+                            //         /** push evolves_to objects to STACK */
+                            //         stack = [...stack, ...stack[0].evolves_to];
+                            //     }
+                            //     /** add evolution + stage */
+                            //     evolutions.push({ [stack[0].species.name] : stage });
+                            //     /** pop STACK */
+                            //     stack.shift();
+                            //     index++;
+                            //     /** if loop index = stage2Start, increment stage */
+                            //     if (index === stage2Start) {
+                            //         stage++;
+                            //     }
+                            // }
+                            const evolutions = [chain.species.name];
+                            // let current = [chain.species.name];
 
-                            let index = 1; // the loop index
-                            let stage = 1; // the evolution stage #
-                            let stage2Start = 0; // the start index of stage 2 evolutions
-
-                            /** initialize STACK w/ evolves_to objects */
                             let stack = [...chain.evolves_to];
-                            /** while STACK is not empty */
+
+                            let temp = chain.evolves_to.map(evolution => [chain.species.name, evolution.species.name]);
+                            console.log('temp', temp)
+                            let i = 0;
+
                             while (stack.length > 0) {
-                                /** if TOP of STACK has evolutions */
                                 if (stack[0].evolves_to.length > 0) {
-                                    /** record start index of stage 2 evolutions */
-                                    stage2Start = stage2Start ? stage2Start : stack.length + 1;
-                                    /** push evolves_to objects to STACK */
-                                    stack = [...stack, ...stack[0].evolves_to];
+                                    const top = stack.shift();
+                                    stack = [top, ...top.evolves_to, ...stack];
+
+                                    if (stack[0].evolves_to.length > 1) {
+                                        temp = [...temp, ...temp];
+                                        console.log('temp2', temp)
+                                    }
+
+                                    stack[0].evolves_to.forEach((evol, index) => temp[index + i] = [...temp[index + i], evol.species.name])
+                                    i++;
+                                    console.log('temp3', temp)
                                 }
-                                /** add evolution + stage */
-                                evolutions.push({ [stack[0].species.name] : stage });
-                                /** pop STACK */
+                                evolutions.push(stack[0].species.name);
                                 stack.shift();
-                                index++;
-                                /** if loop index = stage2Start, increment stage */
-                                if (index === stage2Start) {
-                                    stage++;
-                                }
                             }
 
+                            console.log(evolutions)
                             const pokemon = {...this.state.pokemon};
                             pokemon.evolutions = evolutions;
                             this.setState({ pokemon });
