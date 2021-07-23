@@ -204,6 +204,7 @@ class Pokedex extends React.Component {
     getForms(url) {
         axios.get(url)
             .then(response => {
+                console.log(response)
                 /** extract a list of form names */
                 const varieties = _.pluck(_.pluck(response.data.varieties, "pokemon"), "name");
                 const pokemon = { ...this.state.pokemon };
@@ -223,35 +224,41 @@ class Pokedex extends React.Component {
                         const chain = response.data.chain;
                         /** if there are evolutions */
                         if (chain.evolves_to.length > 0) {
-                            /** initialize evolutions array w/ base pokemon + stage = 0 */
-                            const evolutions = [{ [chain.species.name] : 0 }];
-
-                            let index = 1; // the loop index
-                            let stage = 1; // the evolution stage #
-                            let stage2Start = 0; // the start index of stage 2 evolutions
-
-                            /** initialize STACK w/ evolves_to objects */
+                            /** initialize STACK w/ stage 1 evolution objects */
                             let stack = [...chain.evolves_to];
+                            /**
+                             * for each stage 1 evolution, initialize evolutions w/ an array of stage 0 & 1 evolutions
+                             * e.g. [ [stage-0, stage-1], ... ]
+                             */
+                            const evolutions = chain.evolves_to.map(evolution =>
+                                [chain.species.name, evolution.species.name]
+                            );
+                            /** the array index */
+                            let arrayIndex = 0;
                             /** while STACK is not empty */
                             while (stack.length > 0) {
-                                /** if TOP of STACK has evolutions */
+                                /** if TOP has evolutions (stage 2) */
                                 if (stack[0].evolves_to.length > 0) {
-                                    /** record start index of stage 2 evolutions */
-                                    stage2Start = stage2Start ? stage2Start : stack.length + 1;
-                                    /** push evolves_to objects to STACK */
-                                    stack = [...stack, ...stack[0].evolves_to];
+                                    const top = stack.shift();
+                                    /** push stage 2 evolution(s) at index 1; DFS handle chain first */
+                                    stack = [top, ...top.evolves_to, ...stack];
+                                    /** if TOP has 1+ stage 2 evolutions */
+                                    if (stack[0].evolves_to.length > 1) {
+                                        /** deep copy evolutions array */
+                                        const copy = JSON.parse(JSON.stringify(evolutions));
+                                        /** push copy */
+                                        evolutions.push(...copy);
+                                    }
+                                    /** push each stage 2 evolution to their respective chain */
+                                    stack[0].evolves_to.forEach((evolution, index) =>
+                                        evolutions[index + arrayIndex].push(evolution.species.name)
+                                    );
+                                    arrayIndex++;
                                 }
-                                /** add evolution + stage */
-                                evolutions.push({ [stack[0].species.name] : stage });
-                                /** pop STACK */
                                 stack.shift();
-                                index++;
-                                /** if loop index = stage2Start, increment stage */
-                                if (index === stage2Start) {
-                                    stage++;
-                                }
                             }
 
+                            console.log(evolutions)
                             const pokemon = {...this.state.pokemon};
                             pokemon.evolutions = evolutions;
                             this.setState({ pokemon });
