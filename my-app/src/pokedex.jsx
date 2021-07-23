@@ -2,9 +2,10 @@ import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Button, Container, Dropdown, Grid, Header, Image, Loader, Search } from 'semantic-ui-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import * as _ from 'underscore';
+import Evolutions from './evolutions';
 
 /**
  * the pokedex component
@@ -52,7 +53,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon('ludicolo');
+        this.getPokemon('ralts');
         this.getPokemonList();
     }
 
@@ -204,7 +205,6 @@ class Pokedex extends React.Component {
     getForms(url) {
         axios.get(url)
             .then(response => {
-                console.log(response)
                 /** extract a list of form names */
                 const varieties = _.pluck(_.pluck(response.data.varieties, "pokemon"), "name");
                 const pokemon = { ...this.state.pokemon };
@@ -231,8 +231,10 @@ class Pokedex extends React.Component {
                              * e.g. [ [stage-0, stage-1], ... ]
                              */
                             const evolutions = chain.evolves_to.map(evolution =>
-                                [chain.species.name, evolution.species.name]
+                                [ {[chain.species.name] : chain.species.url.split('/')[6]},
+                                  {[evolution.species.name] : evolution.species.url.split('/')[6]} ]
                             );
+                            // console.log(chain.species.url.split('/')[6])
                             /** the array index */
                             let arrayIndex = 0;
                             /** while STACK is not empty */
@@ -251,14 +253,15 @@ class Pokedex extends React.Component {
                                     }
                                     /** push each stage 2 evolution to their respective chain */
                                     stack[0].evolves_to.forEach((evolution, index) =>
-                                        evolutions[index + arrayIndex].push(evolution.species.name)
+                                        evolutions[index + arrayIndex].push(
+                                            {[evolution.species.name]: evolution.species.url.split('/')[6]}
+                                        )
                                     );
                                     arrayIndex++;
                                 }
                                 stack.shift();
                             }
 
-                            console.log(evolutions)
                             const pokemon = {...this.state.pokemon};
                             pokemon.evolutions = evolutions;
                             this.setState({ pokemon });
@@ -443,32 +446,9 @@ class Pokedex extends React.Component {
                                     </ResponsiveContainer>
                                 </Grid.Column>
                             </Grid.Row>
-                            {/*<Header as='h1'>Name: {pokemon.name}</Header>*/}
-                            {/*<Image src={pokemon.sprite}/>*/}
-                            {/*<p>Height: {pokemon.height}</p>*/}
-                            {/*<p>Weight: {pokemon.weight}</p>*/}
-                            {/*Types:*/}
-                            {/*<ul>*/}
-                            {/*    {*/}
-                            {/*        pokemon.types.map(type => <li key={type}>{type}</li>)*/}
-                            {/*    }*/}
-                            {/*</ul>*/}
-                            {/*Abilities:*/}
-                            {/*<ul>*/}
-                            {/*    {*/}
-                            {/*        Object.keys(pokemon.abilities).map(ability => {*/}
-                            {/*            return <li key={ability}>{ability}: {pokemon.abilities[ability]}</li>*/}
-                            {/*        })*/}
-                            {/*    }*/}
-                            {/*</ul>*/}
-                            {/*Stats:*/}
-                            {/*<ul>*/}
-                            {/*    {*/}
-                            {/*        Object.keys(pokemon.stats).map(stat => {*/}
-                            {/*            return <li key={stat}>{stat}: {pokemon.stats[stat]}</li>*/}
-                            {/*        })*/}
-                            {/*    }*/}
-                            {/*</ul>*/}
+                            <Grid.Row>
+                                <Evolutions evolutions={pokemon.evolutions}/>
+                            </Grid.Row>
                         </Grid>
                 }
             </Container>
