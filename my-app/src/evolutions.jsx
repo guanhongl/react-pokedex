@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { List, Grid, Image, Header, Button, Icon } from 'semantic-ui-react';
+import { List, Grid, Image, Header, Button, Icon, Loader } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -11,15 +11,19 @@ class Evolutions extends React.Component {
         this.state = {
             sprites: {},
             types: {},
+            maxChains: 1,
         };
         this.getPokemon = this.getPokemon.bind(this);
+        this.getMore = this.getMore.bind(this);
     }
 
     componentDidMount() {
-        this.props.list.forEach(id => {
-           this.getPokemon(id)
-        });
         console.log(this.props.evolutions)
+        console.log(this.props.list)
+        if (this.props.list[0] !== 'none')
+            this.props.list.forEach(id => {
+               this.getPokemon(id)
+            });
     }
 
     getPokemon(id) {
@@ -42,63 +46,79 @@ class Evolutions extends React.Component {
             this.props.getPokemon(id);
     }
 
+    getMore() {
+        this.setState({ maxChains: this.props.evolutions.length });
+    }
+
     render() {
         const sprites = this.state.sprites;
         const types = this.state.types;
-        if(Object.keys(sprites).length !== this.props.list.length) {
+        if(this.props.list[0] === 'none') {
+            return <Header as='h3' className='no-evo-header'>No evolutions</Header>
+        }
+        if(Object.keys(sprites).length + Object.keys(types).length !== 2 * this.props.list.length) {
             console.log('load')
-            return <div />
+            return <Loader active inline='centered'>Getting Evolutions...</Loader>
         }
         console.log('finish load', this.state.sprites)
         console.log(this.state.types)
         return (
             <Grid id='evo-grid'>
                 {
-                    this.props.evolutions.map((chain, index) =>
-                        <Grid.Row centered key={_.uniqueId('ROW_')}>
-                            <List horizontal>
-                                {
-                                    chain.map((pokemon, index) => {
-                                        const listItem = [];
-                                        listItem.push(
-                                            <List.Item
-                                                key={_.uniqueId('KEY_')}
-                                                onClick={() => this.handleClick(Object.values(pokemon))}
-                                                className='evo-item'
-                                            >
-                                                {/*{console.log(sprites[Object.values(pokemon)])}*/}
-                                                <Image src={sprites[Object.values(pokemon)]}/>
-                                                <div className='evolution-header'>{Object.keys(pokemon)}
-                                                    <span> #{Object.values(pokemon)[0].padStart(3, '0')}</span>
-                                                </div>
-                                                <div>
-                                                    {
-                                                        types[Object.values(pokemon)].map(type =>
-                                                            <Button
-                                                                size={'mini'}
-                                                                className={`type-button ${type}`}
-                                                                key={_.uniqueId('TYPE_')}
-                                                            >
-                                                                {type.toUpperCase()}
-                                                            </Button>
-                                                        )
-                                                    }
-                                                </div>
-                                            </List.Item>
-                                        );
-                                        if (index !== chain.length - 1) {
+                    this.props.evolutions.map((chain, index) => {
+                        if (index < this.state.maxChains) {
+                            return (
+                            <Grid.Row centered key={_.uniqueId('ROW_')}>
+                                <List horizontal>
+                                    {
+                                        chain.map((pokemon, index) => {
+                                            const listItem = [];
                                             listItem.push(
-                                                <List.Item key={_.uniqueId('ARROW_')}>
-                                                    <Icon className='evo-arrow' name='arrow right' size='big' />
+                                                <List.Item
+                                                    key={_.uniqueId('KEY_')}
+                                                    onClick={() => this.handleClick(Object.values(pokemon))}
+                                                    className='evo-item'
+                                                >
+                                                    {/*{console.log(sprites[Object.values(pokemon)])}*/}
+                                                    <Image src={sprites[Object.values(pokemon)]}/>
+                                                    <div className='evolution-header'>{Object.keys(pokemon)}
+                                                        <span> #{Object.values(pokemon)[0].padStart(3, '0')}</span>
+                                                    </div>
+                                                    <div>
+                                                        {
+                                                            types[Object.values(pokemon)].map(type =>
+                                                                <Button
+                                                                    size={'mini'}
+                                                                    className={`type-button ${type}`}
+                                                                    key={_.uniqueId('TYPE_')}
+                                                                >
+                                                                    {type.toUpperCase()}
+                                                                </Button>
+                                                            )
+                                                        }
+                                                    </div>
                                                 </List.Item>
-                                            )
-                                        }
-                                        return listItem;
-                                    })
-                                }
-                            </List>
-                        </Grid.Row>
-                    )
+                                            );
+                                            if (index !== chain.length - 1) {
+                                                listItem.push(
+                                                    <List.Item key={_.uniqueId('ARROW_')}>
+                                                        <Icon className='evo-arrow' name='arrow right' size='big'/>
+                                                    </List.Item>
+                                                )
+                                            }
+                                            return listItem;
+                                        })
+                                    }
+                                </List>
+                            </Grid.Row>);
+                        }
+                    })
+                }
+                {
+                    this.state.maxChains < this.props.evolutions.length &&
+                    <Grid.Row>
+                        <Button className='evo-button' onClick={this.getMore}>show more evolutions</Button>
+                    </Grid.Row>
                 }
             </Grid>
         );

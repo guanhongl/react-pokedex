@@ -1,7 +1,18 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Button, Container, Dropdown, Grid, Header, Image, Label, Loader, Search } from 'semantic-ui-react';
+import {
+    Button,
+    Container,
+    Dropdown,
+    Grid,
+    Header,
+    Image,
+    Label,
+    Loader,
+    Placeholder,
+    Search
+} from 'semantic-ui-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import * as _ from 'underscore';
@@ -54,7 +65,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon('1');
+        this.getPokemon('eevee');
         this.getPokemonList();
     }
 
@@ -270,6 +281,13 @@ class Pokedex extends React.Component {
                             pokemon.evolutionList = list;
                             this.setState({ pokemon });
                         }
+                        else {
+                            /** push dummy data */
+                            const pokemon = {...this.state.pokemon};
+                            pokemon.evolutions = ['none'];
+                            pokemon.evolutionList = ['none'];
+                            this.setState({ pokemon });
+                        }
                     })
                     .catch(error => {
                         console.log(error);
@@ -458,7 +476,7 @@ class Pokedex extends React.Component {
                                         <Evolutions evolutions={pokemon.evolutions} list={pokemon.evolutionList}
                                                     getPokemon={this.getPokemon} currentId={pokemon.id}/>
                                         :
-                                        <div>no evolutions</div>
+                                        <Loader active inline='centered'>Getting Evolutions...</Loader>
                                 }
                             </Grid.Row>
                         </Grid>
