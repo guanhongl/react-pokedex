@@ -27,6 +27,7 @@ class Pokedex extends React.Component {
                 weight: NaN,
                 forms: [],
                 evolutions: [],
+                evolutionList: [],
                 /** TODO: pokemon info. (pokemon-species/{id or name} -> flavor_text_entries) */
             },
             pokemonList: [],
@@ -224,6 +225,7 @@ class Pokedex extends React.Component {
                         const chain = response.data.chain;
                         /** if there are evolutions */
                         if (chain.evolves_to.length > 0) {
+                            const list = [chain.species.url.split('/')[6]];
                             /** initialize STACK w/ stage 1 evolution objects */
                             let stack = [...chain.evolves_to];
                             /**
@@ -259,11 +261,13 @@ class Pokedex extends React.Component {
                                     );
                                     arrayIndex++;
                                 }
+                                list.push(stack[0].species.url.split('/')[6]);
                                 stack.shift();
                             }
 
                             const pokemon = {...this.state.pokemon};
                             pokemon.evolutions = evolutions;
+                            pokemon.evolutionList = list;
                             this.setState({ pokemon });
                         }
                     })
@@ -446,8 +450,14 @@ class Pokedex extends React.Component {
                                     </ResponsiveContainer>
                                 </Grid.Column>
                             </Grid.Row>
-                            <Grid.Row>
-                                <Evolutions evolutions={pokemon.evolutions}/>
+                            <Grid.Row centered>
+                                {/** TODO: loader? */}
+                                {
+                                    (pokemon.evolutions.length !== 0 && pokemon.evolutionList.length !== 0) ?
+                                        <Evolutions evolutions={pokemon.evolutions} list={pokemon.evolutionList} />
+                                        :
+                                        <div>no evolutions</div>
+                                }
                             </Grid.Row>
                         </Grid>
                 }

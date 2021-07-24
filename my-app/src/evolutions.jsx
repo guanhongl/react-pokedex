@@ -1,30 +1,30 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { List } from 'semantic-ui-react';
+import { List, Grid, Image, Header } from 'semantic-ui-react';
 import axios from 'axios';
 
 class Evolutions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            sprites: {},
         };
         this.getPokemon = this.getPokemon.bind(this);
     }
 
     componentDidMount() {
-        this.getPokemon(1)
+        this.props.list.forEach(id => {
+           this.getPokemon(id)
+        });
         console.log(this.props.evolutions)
-        this.props.evolutions.map((chain, index) => console.log(chain))
     }
 
     getPokemon(id) {
         axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
             .then(response => {
-                const sprite = response.data.sprites.front_default;
-                const data = this.props.evolutions;
-
+                const sprites = {...this.state.sprites, [id] : response.data.sprites.front_default};
+                this.setState({ sprites });
             })
             .catch(error => {
                 console.log(error);
@@ -32,15 +32,32 @@ class Evolutions extends React.Component {
     }
 
     render() {
-        if(this.state.data.length === 0) {
+        const sprites = this.state.sprites;
+        if(Object.keys(sprites).length !== this.props.list.length) {
             console.log('load')
             return <div />
         }
-
-        console.log('render')
+        console.log('finish load', this.state.sprites)
         return (
-            <div>
-            </div>
+            <Grid id='evolutions-grid'>
+                {
+                    this.props.evolutions.map((chain, index) =>
+                        <Grid.Row centered>
+                            <List horizontal relaxed>
+                                {
+                                    chain.map((pokemon, index) =>
+                                        <List.Item>
+                                            {/*{console.log(sprites[Object.values(pokemon)])}*/}
+                                            <Image src={sprites[Object.values(pokemon)]} size='small' />
+                                            <Header as='h3'>{Object.keys(pokemon)}</Header>
+                                        </List.Item>
+                                    )
+                                }
+                            </List>
+                        </Grid.Row>
+                    )
+                }
+            </Grid>
         );
     }
 }
