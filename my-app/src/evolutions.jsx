@@ -69,7 +69,7 @@ class Evolutions extends React.Component {
                                                 {/*{console.log(sprites[Object.values(pokemon)])}*/}
                                                 <Image src={sprites[Object.values(pokemon)]}/>
                                                 <div className='evolution-header'>{Object.keys(pokemon)}
-                                                    <span> #{Object.values(pokemon)}</span>
+                                                    <span> #{Object.values(pokemon)[0].padStart(3, '0')}</span>
                                                 </div>
                                                 <div>
                                                     {
