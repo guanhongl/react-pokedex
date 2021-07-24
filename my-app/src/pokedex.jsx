@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Button, Container, Dropdown, Grid, Header, Image, Loader, Search } from 'semantic-ui-react';
+import { Button, Container, Dropdown, Grid, Header, Image, Label, Loader, Search } from 'semantic-ui-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import * as _ from 'underscore';
@@ -54,7 +54,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        this.getPokemon('ralts');
+        this.getPokemon('1');
         this.getPokemonList();
     }
 
@@ -450,11 +450,13 @@ class Pokedex extends React.Component {
                                     </ResponsiveContainer>
                                 </Grid.Column>
                             </Grid.Row>
-                            <Grid.Row centered>
+                            <Grid.Row centered id='evolutions-row'>
+                                <Label attached='top' className={`evo-label ${pokemon.types[0]}`}>EVOLUTIONS</Label>
                                 {/** TODO: loader? */}
                                 {
                                     (pokemon.evolutions.length !== 0 && pokemon.evolutionList.length !== 0) ?
-                                        <Evolutions evolutions={pokemon.evolutions} list={pokemon.evolutionList} />
+                                        <Evolutions evolutions={pokemon.evolutions} list={pokemon.evolutionList}
+                                                    getPokemon={this.getPokemon} currentId={pokemon.id}/>
                                         :
                                         <div>no evolutions</div>
                                 }

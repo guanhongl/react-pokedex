@@ -21,10 +21,7 @@ class TopMenu extends React.Component {
                     active={this.state.activeItem === 'home'}
                     onClick={() => this.setState({ activeItem: 'home' })}
                 >
-                    <Image
-                        src='https://i.pinimg.com/originals/a9/4f/4d/a94f4d75a2e429a20838d28d2ae2b996.png'
-                        size='mini'
-                    />
+                    <Image className='logo' src='../pokeball-logo.png' />
                     <span id='menu-header'>
                         React-Pokedex
                     </span>
