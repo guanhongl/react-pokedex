@@ -450,7 +450,7 @@ class Pokedex extends React.Component {
                                     </ResponsiveContainer>
                                 </Grid.Column>
                             </Grid.Row>
-                            <Grid.Row centered id='evolutions-row'>
+                            <Grid.Row centered id='evolutions-row' className={`${pokemon.types[0]}-border`}>
                                 <Label attached='top' className={`evo-label ${pokemon.types[0]}`}>EVOLUTIONS</Label>
                                 {/** TODO: loader? */}
                                 {

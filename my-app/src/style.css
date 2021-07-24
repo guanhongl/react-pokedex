@@ -75,6 +75,78 @@ body {
   background-color: #D685AD !important;
 }
 
+.normal-border {
+  border: 1px solid #A8A77A !important;
+}
+
+.fire-border {
+  border: 1px solid #EE8130 !important;
+}
+
+.water-border {
+  border: 1px solid #6390F0 !important;
+}
+
+.electric-border {
+  border: 1px solid #F7D02C !important;
+}
+
+.grass-border {
+  border: 1px solid #7AC74C !important;
+}
+
+.ice-border {
+  border: 1px solid #96D9D6 !important;
+}
+
+.fighting-border {
+  border: 1px solid #C22E28 !important;
+}
+
+.poison-border {
+  border: 1px solid #A33EA1 !important;
+}
+
+.ground-border {
+  border: 1px solid #E2BF65 !important;
+}
+
+.flying-border {
+  border: 1px solid #A98FF3 !important;
+}
+
+.psychic-border {
+  border: 1px solid #F95587 !important;
+}
+
+.bug-border {
+  border: 1px solid #A6B91A !important;
+}
+
+.rock-border {
+  border: 1px solid #B6A136 !important;
+}
+
+.ghost-border {
+  border: 1px solid #735797 !important;
+}
+
+.dragon-border {
+  border: 1px solid #6F35FC !important;
+}
+
+.dark-border {
+  border: 1px solid #705746 !important;
+}
+
+.steel-border {
+  border: 1px solid #B7B7CE !important;
+}
+
+.fairy-border {
+  border: 1px solid #D685AD !important;
+}
+
 #pokedex {
   margin-top: 50px;
   margin-bottom: 50px;
@@ -108,7 +180,7 @@ body {
   font-weight: bold;
 }
 #pokedex #evolutions-row {
-  border-radius: 30px;
+  border-radius: 32px;
   margin: 1%;
 }
 #pokedex #evolutions-row .evolution-header {
