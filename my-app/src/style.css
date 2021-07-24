@@ -226,6 +226,12 @@ body {
   font-size: 13px;
 }
 
+#top-menu {
+  position: sticky;
+  top: 0;
+  background-color: whitesmoke;
+  z-index: 5;
+}
 #top-menu .logo {
   width: 20px;
   margin-right: 5px;
@@ -237,6 +243,9 @@ body {
   height: 50px;
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+#top-menu a {
+  color: black;
 }
 
 #footer {

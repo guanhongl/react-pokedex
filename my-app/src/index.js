@@ -3,20 +3,35 @@ import ReactDOM from 'react-dom';
 import Pokedex from './pokedex.jsx';
 import TopMenu from './topmenu';
 import Footer from './footer';
+import Home from './home';
+import List from './list';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 class App extends React.Component {
     render() {
         return (
-          <div>
-              <TopMenu />
-              <Pokedex />
-              <Footer />
-          </div>
+            <Router>
+                <div>
+                    <TopMenu/>
+                    <Switch>
+                        <Route exact path='/'>
+                            <Home />
+                        </Route>
+                        <Route exact path='/search'>
+                            <Pokedex />
+                        </Route>
+                        <Route exact path='/list'>
+                            <List />
+                        </Route>
+                    </Switch>
+                    <Footer/>
+                </div>
+            </Router>
         );
     }
 }
 
 ReactDOM.render(
-    <App />,
+    <App/>,
     document.querySelector('#root')
 );

@@ -263,6 +263,10 @@ body {
 }
 
 #top-menu {
+    position: sticky;
+    top: 0;
+    background-color: whitesmoke;
+    z-index: 5;
 
     .logo {
         width: 20px;
@@ -279,6 +283,9 @@ body {
         padding-bottom: 1rem;
     }
 
+    a {
+        color: black;
+    }
 }
 
 #footer {
