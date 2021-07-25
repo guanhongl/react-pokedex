@@ -172,9 +172,15 @@ body {
   width: 90px;
   color: white;
 }
-#pokedex .card .ability-button {
-  background-color: inherit;
+#pokedex .card .ability-div {
+  margin: 10px 20% 0 20%;
+  display: flex;
+  justify-content: space-evenly;
+}
+#pokedex .card .ability-div span {
   font-size: 12px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.87);
 }
 #pokedex .bar-chart {
   font-weight: bold;

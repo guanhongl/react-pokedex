@@ -428,17 +428,11 @@ class Pokedex extends React.Component {
                                             }
                                         </div>
                                         {/** ability */}
-                                        <div>
+                                        <div className='ability-div'>
                                             {
-                                                Object.keys(pokemon.abilities).map(ability => {
-                                                    return (<Button
-                                                                size={'mini'}
-                                                                className='ability-button'
-                                                                key={ability}
-                                                            >
-                                                                {ability.toUpperCase()}
-                                                            </Button>);
-                                                })
+                                                Object.keys(pokemon.abilities).map(ability =>
+                                                    <span key={ability}>{ability.toUpperCase()} </span>
+                                                )
                                             }
                                         </div>
                                     </div>
