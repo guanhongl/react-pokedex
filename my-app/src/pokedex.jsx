@@ -475,7 +475,10 @@ class Pokedex extends React.Component {
                             <Grid.Row centered id='evolutions-row' className={`${pokemon.types[0]}-border`}>
                                 <Label attached='top' className={`evo-label ${pokemon.types[0]}`}>
                                     EVOLUTIONS
-                                    <Checkbox toggle onClick={this.handleToggle.bind(this)} checked={this.state.toggled}/>
+                                    <span>
+                                        <label>show all </label>
+                                        <Checkbox toggle onClick={this.handleToggle.bind(this)} checked={this.state.toggled}/>
+                                    </span>
                                 </Label>
                                 {
                                     (pokemon.evolutions.length !== 0 && pokemon.evolutionList.length !== 0) ?

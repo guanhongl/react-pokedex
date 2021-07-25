@@ -204,7 +204,7 @@ body {
   cursor: pointer;
 }
 #pokedex #evolutions-row #evo-grid {
-  margin: 14px 0 !important;
+  margin-bottom: 0.5rem;
 }
 #pokedex #evolutions-row #evo-grid .row {
   padding: 0;
@@ -217,6 +217,13 @@ body {
   border-radius: 30px 30px 0 0;
   padding-left: 20px;
   color: white;
+}
+#pokedex #evolutions-row .evo-label span {
+  display: inherit;
+  align-items: center;
+}
+#pokedex #evolutions-row .evo-label span label {
+  margin-right: 10px;
 }
 #pokedex #evolutions-row .no-evo-header {
   padding: 1em 0;
