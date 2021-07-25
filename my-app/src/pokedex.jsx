@@ -37,6 +37,7 @@ class Pokedex extends React.Component {
             searchResults: [],
             searchQuery: '',
             toggled: false,
+            maxChains: 1,
             /** TODO: previous button */
             prevPokemon: NaN,
         };
@@ -67,7 +68,7 @@ class Pokedex extends React.Component {
      */
     componentDidUpdate(prevProps, prevState) {
         if (prevState.pokemon.id !== this.state.pokemon.id) {
-            console.log('id changed!')
+            // console.log('id changed!')
             // this.setState({ prevPokemon: prevState.pokemon.id });
         }
     }
@@ -271,6 +272,9 @@ class Pokedex extends React.Component {
                             pokemon.evolutions = evolutions;
                             pokemon.evolutionList = list;
                             this.setState({ pokemon });
+                            if (this.state.toggled) {
+                                this.setState({ maxChains: evolutions.length });
+                            }
                         }
                         else {
                             /** push dummy data */
@@ -317,6 +321,15 @@ class Pokedex extends React.Component {
         if (data.value !== this.state.pokemon.name) {
             this.setState({ isLoadingSingle: true }, () => this.getPokemon(data.value));
         }
+    }
+
+    handleToggle(event, data) {
+        // console.log(this.state.pokemon.evolutions.length)
+        data.checked ?
+            this.setState({ maxChains: this.state.pokemon.evolutions.length })
+            :
+            this.setState({ maxChains: 1 })
+        this.setState({ toggled: data.checked });
     }
 
     /** https://www.schemecolor.com/red-orange-green-gradient.php */
@@ -462,16 +475,13 @@ class Pokedex extends React.Component {
                             <Grid.Row centered id='evolutions-row' className={`${pokemon.types[0]}-border`}>
                                 <Label attached='top' className={`evo-label ${pokemon.types[0]}`}>
                                     EVOLUTIONS
-                                    <Checkbox
-                                        toggle
-                                        onClick={(e, target) => this.setState({ toggled: target.checked })}
-                                    />
+                                    <Checkbox toggle onClick={this.handleToggle.bind(this)} checked={this.state.toggled}/>
                                 </Label>
-                                {/** TODO: loader? */}
                                 {
                                     (pokemon.evolutions.length !== 0 && pokemon.evolutionList.length !== 0) ?
                                         <Evolutions evolutions={pokemon.evolutions} list={pokemon.evolutionList}
-                                                    getPokemon={this.getPokemon} currentId={pokemon.id} toggled={this.state.toggled}/>
+                                                    getPokemon={this.getPokemon} currentId={pokemon.id}
+                                                    maxChains={this.state.maxChains}/>
                                         :
                                         <Loader active inline='centered'>Getting Evolutions...</Loader>
                                 }

@@ -255,13 +255,6 @@ body {
             padding: 1em 0;
         }
 
-        .evo-button {
-            margin: 0 auto -14px auto;
-            width: 80%;
-            padding: 2px 0;
-            font-size: 13px;
-        }
-
         .ui.toggle.checkbox input:focus:checked~.box:before,
         .ui.toggle.checkbox input:focus:checked~label:before {
             background-color: lightgrey !important

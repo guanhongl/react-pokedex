@@ -11,15 +11,13 @@ class Evolutions extends React.Component {
         this.state = {
             sprites: {},
             types: {},
-            maxChains: 1,
         };
         this.getPokemon = this.getPokemon.bind(this);
-        this.getMore = this.getMore.bind(this);
     }
 
     componentDidMount() {
-        console.log(this.props.evolutions)
-        console.log(this.props.list)
+        // console.log(this.props.evolutions)
+        // console.log(this.props.list)
         if (this.props.list[0] !== 'none')
             this.props.list.forEach(id => {
                this.getPokemon(id)
@@ -46,10 +44,6 @@ class Evolutions extends React.Component {
             this.props.getPokemon(id);
     }
 
-    getMore() {
-        this.setState({ maxChains: this.props.evolutions.length });
-    }
-
     render() {
         const sprites = this.state.sprites;
         const types = this.state.types;
@@ -57,16 +51,16 @@ class Evolutions extends React.Component {
             return <Header as='h3' className='no-evo-header'>No evolutions</Header>
         }
         if(Object.keys(sprites).length + Object.keys(types).length !== 2 * this.props.list.length) {
-            console.log('load')
+            // console.log('load')
             return <Loader active inline='centered'>Getting Evolutions...</Loader>
         }
-        console.log('finish load', this.state.sprites)
-        console.log(this.state.types)
+        // console.log('finish load', this.state.sprites)
+        // console.log(this.state.types)
         return (
             <Grid id='evo-grid'>
                 {
                     this.props.evolutions.map((chain, index) => {
-                        if (index < this.state.maxChains || this.props.toggled) {
+                        if (index < this.props.maxChains) {
                             return (
                             <Grid.Row centered key={_.uniqueId('ROW_')}>
                                 <List horizontal>
@@ -113,12 +107,6 @@ class Evolutions extends React.Component {
                             </Grid.Row>);
                         }
                     })
-                }
-                {
-                    (this.state.maxChains < this.props.evolutions.length && !this.props.toggled) &&
-                    <Grid.Row>
-                        <Button className='evo-button' onClick={this.getMore}>show more evolutions</Button>
-                    </Grid.Row>
                 }
             </Grid>
         );
