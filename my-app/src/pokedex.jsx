@@ -7,6 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts
 import axios from 'axios';
 import * as _ from 'underscore';
 import Evolutions from './evolutions';
+import AbilityDesc from './abilitydesc';
 
 /**
  * the pokedex component
@@ -36,8 +37,13 @@ class Pokedex extends React.Component {
             isLoadingList: true,
             searchResults: [],
             searchQuery: '',
+            /** see more toggle data */
             toggled: false,
             maxChains: 1,
+            /** ability modal data */
+            active: false,
+            ability: '',
+            desc: '',
             /** TODO: previous button */
             prevPokemon: NaN,
         };
@@ -51,6 +57,8 @@ class Pokedex extends React.Component {
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.handleSearchSelect = this.handleSearchSelect.bind(this);
         this.handleDropdown = this.handleDropdown.bind(this);
+        this.handleAbilityClick = this.handleAbilityClick.bind(this);
+        this.handleAbilityClose = this.handleAbilityClose.bind(this);
     }
 
     /**
@@ -124,10 +132,10 @@ class Pokedex extends React.Component {
                 try {
                     /** TODO: long description for effect? */
                     response.data.effect_entries[1].language.name === "en"
-                        ? abilities[ability] = response.data.effect_entries[1].short_effect
-                        : abilities[ability] = response.data.effect_entries[0].short_effect
+                        ? abilities[ability] = response.data.effect_entries[1].effect
+                        : abilities[ability] = response.data.effect_entries[0].effect;
                 }
-                    /** else */
+                /** else */
                 catch(error) {
                     console.log(error);
                     abilities[ability] = response.data.flavor_text_entries[0].flavor_text;
@@ -332,6 +340,14 @@ class Pokedex extends React.Component {
         this.setState({ toggled: data.checked });
     }
 
+    handleAbilityClick(ability, desc) {
+        this.setState({ active: true, ability, desc });
+    }
+
+    handleAbilityClose() {
+        this.setState({ active: false });
+    }
+
     /** https://www.schemecolor.com/red-orange-green-gradient.php */
     fillBar(value) {
         if (value < 50) {
@@ -435,6 +451,7 @@ class Pokedex extends React.Component {
                                                                 size={'mini'}
                                                                 className='ability-button'
                                                                 key={ability}
+                                                                onClick={() => this.handleAbilityClick(ability, pokemon.abilities[ability])}
                                                             >
                                                                 {ability.toUpperCase()}
                                                             </Button>);
@@ -491,6 +508,8 @@ class Pokedex extends React.Component {
                             </Grid.Row>
                         </Grid>
                 }
+                <AbilityDesc active={this.state.active} handleClose={this.handleAbilityClose}
+                             ability={this.state.ability} desc={this.state.desc} />
             </Container>
         );
     }
