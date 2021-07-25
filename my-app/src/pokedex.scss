@@ -242,7 +242,9 @@ body {
         }
 
         .evo-label {
-            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 1em;
             border-radius: 30px 30px 0 0;
             padding-left: 20px;
@@ -259,6 +261,15 @@ body {
             padding: 2px 0;
             font-size: 13px;
         }
+
+        .ui.toggle.checkbox input:focus:checked~.box:before,
+        .ui.toggle.checkbox input:focus:checked~label:before {
+            background-color: lightgrey !important
+        }
+
+        //.ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
+        //    background-color: whitesmoke;
+        //}
     }
 }
 

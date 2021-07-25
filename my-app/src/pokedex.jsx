@@ -1,18 +1,8 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import {
-    Button,
-    Container,
-    Dropdown,
-    Grid,
-    Header,
-    Image,
-    Label,
-    Loader,
-    Placeholder,
-    Search
-} from 'semantic-ui-react';
+import { Button, Container, Dropdown, Grid, Header, Image, Label, Loader, Placeholder, Search,
+         Checkbox } from 'semantic-ui-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import * as _ from 'underscore';
@@ -46,6 +36,7 @@ class Pokedex extends React.Component {
             isLoadingList: true,
             searchResults: [],
             searchQuery: '',
+            toggled: false,
             /** TODO: previous button */
             prevPokemon: NaN,
         };
@@ -469,12 +460,18 @@ class Pokedex extends React.Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered id='evolutions-row' className={`${pokemon.types[0]}-border`}>
-                                <Label attached='top' className={`evo-label ${pokemon.types[0]}`}>EVOLUTIONS</Label>
+                                <Label attached='top' className={`evo-label ${pokemon.types[0]}`}>
+                                    EVOLUTIONS
+                                    <Checkbox
+                                        toggle
+                                        onClick={(e, target) => this.setState({ toggled: target.checked })}
+                                    />
+                                </Label>
                                 {/** TODO: loader? */}
                                 {
                                     (pokemon.evolutions.length !== 0 && pokemon.evolutionList.length !== 0) ?
                                         <Evolutions evolutions={pokemon.evolutions} list={pokemon.evolutionList}
-                                                    getPokemon={this.getPokemon} currentId={pokemon.id}/>
+                                                    getPokemon={this.getPokemon} currentId={pokemon.id} toggled={this.state.toggled}/>
                                         :
                                         <Loader active inline='centered'>Getting Evolutions...</Loader>
                                 }

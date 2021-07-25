@@ -66,7 +66,7 @@ class Evolutions extends React.Component {
             <Grid id='evo-grid'>
                 {
                     this.props.evolutions.map((chain, index) => {
-                        if (index < this.state.maxChains) {
+                        if (index < this.state.maxChains || this.props.toggled) {
                             return (
                             <Grid.Row centered key={_.uniqueId('ROW_')}>
                                 <List horizontal>
@@ -115,7 +115,7 @@ class Evolutions extends React.Component {
                     })
                 }
                 {
-                    this.state.maxChains < this.props.evolutions.length &&
+                    (this.state.maxChains < this.props.evolutions.length && !this.props.toggled) &&
                     <Grid.Row>
                         <Button className='evo-button' onClick={this.getMore}>show more evolutions</Button>
                     </Grid.Row>
