@@ -22,7 +22,7 @@ class Pokedex extends React.Component {
                 /** height in decimetres */
                 height: NaN,
                 name: '',
-                sprite: '',
+                sprites: [],
                 stats: {},
                 types: [],
                 /** weight in hectograms */
@@ -44,6 +44,8 @@ class Pokedex extends React.Component {
             active: false,
             ability: '',
             desc: '',
+            /** flip image */
+            flipImage: false,
             /** TODO: previous button */
             prevPokemon: NaN,
         };
@@ -164,7 +166,7 @@ class Pokedex extends React.Component {
         pokemon.abilities = {};
         pokemon.height = data.height;
         pokemon.name = data.name;
-        pokemon.sprite = data.sprites.front_default;
+        pokemon.sprites = [data.sprites.front_default, data.sprites.back_default];
         pokemon.stats = this.getStats(data.stats);
         pokemon.types = this.getTypes(data.types);
         pokemon.weight = data.weight;
@@ -420,8 +422,9 @@ class Pokedex extends React.Component {
                             <Grid.Row columns={2}>
                                 <Grid.Column>
                                     <div className='card'>
-                                        {/** sprite */}
-                                        <Image src={pokemon.sprite} centered size='small' />
+                                        {/** sprites */}
+                                        <Image src={this.state.flipImage ? pokemon.sprites[1] : pokemon.sprites[0]} centered size='small'
+                                               onClick={() => this.setState({ flipImage: !this.state.flipImage })} />
                                         {/** name + id */}
                                         <Header as='h2' className='card-header'>
                                             {pokemon.name} #{pokemon.id}
