@@ -133,7 +133,7 @@ class Pokedex extends React.Component {
                 /** if effect entries is defined */
                 try {
                     /** TODO: long description for effect? */
-                    response.data.effect_entries[1].language.name === "en"
+                    response.data.effect_entries[1] && response.data.effect_entries[1].language.name === "en"
                         ? abilities[ability] = response.data.effect_entries[1].effect
                         : abilities[ability] = response.data.effect_entries[0].effect;
                 }
@@ -423,7 +423,7 @@ class Pokedex extends React.Component {
                                 <Grid.Column>
                                     <div className='card'>
                                         {/** sprites */}
-                                        <Image src={this.state.flipImage && pokemon.sprites[1] ? 
+                                        <Image src={this.state.flipImage && pokemon.sprites[1] ?
                                                     pokemon.sprites[1] : pokemon.sprites[0]} centered size='small'
                                                onClick={() => this.setState({ flipImage: !this.state.flipImage })} />
                                         {/** name + id */}

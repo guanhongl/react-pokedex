@@ -176,6 +176,9 @@ body {
   background-color: inherit;
   font-size: 12px;
 }
+#pokedex .card img {
+  cursor: pointer;
+}
 #pokedex .bar-chart {
   font-weight: bold;
 }
