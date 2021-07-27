@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
 import { List, Grid, Image, Header, Button, Icon, Loader } from 'semantic-ui-react';
@@ -13,6 +14,7 @@ class Evolutions extends React.Component {
             types: {},
         };
         this.getPokemon = this.getPokemon.bind(this);
+        this.idToName = this.idToName.bind(this);
     }
 
     componentDidMount() {
@@ -36,12 +38,23 @@ class Evolutions extends React.Component {
             });
     }
 
+    idToName(id) {
+        axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+            .then(response => {
+                // this.props.getPokemon(id);
+                const path = `/search/pokemon/${response.data.name}`;
+                this.props.history.push(path);
+            })
+    }
+
     handleClick(id) {
         // console.log('id',id[0])
         // console.log('prop', this.props.currentId)
         // console.log(id[0] == this.props.currentId)
-        if (id[0] != this.props.currentId)
+        if (id[0] != this.props.currentId) {
             this.props.getPokemon(id);
+            this.idToName(id);
+        }
     }
 
     render() {
@@ -113,4 +126,4 @@ class Evolutions extends React.Component {
     }
 }
 
-export default Evolutions;
+export default withRouter(Evolutions);

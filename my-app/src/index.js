@@ -17,7 +17,7 @@ class App extends React.Component {
                         <Route exact path='/'>
                             <Home />
                         </Route>
-                        <Route exact path='/search'>
+                        <Route exact path='/search/pokemon/:name'>
                             <Pokedex />
                         </Route>
                         <Route exact path='/list'>

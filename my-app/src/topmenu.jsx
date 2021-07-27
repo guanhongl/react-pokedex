@@ -33,7 +33,7 @@ class TopMenu extends React.Component {
                     position='right'
                     active={this.state.activeItem === 'single'}
                 >
-                    <Link to='/search' onClick={() => this.setState({ activeItem: 'single' })}>Search</Link>
+                    <Link to='/search/pokemon/pikachu' onClick={() => this.setState({ activeItem: 'single' })}>Search</Link>
                 </Menu.Item>
                 <Menu.Item
                     active={this.state.activeItem === 'about'}
