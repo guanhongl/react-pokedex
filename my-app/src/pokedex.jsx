@@ -20,13 +20,11 @@ class Pokedex extends React.Component {
             pokemon: {
                 id: NaN,
                 abilities: {},
-                /** height in decimetres */
                 height: NaN,
                 name: '',
                 sprites: [],
                 stats: {},
                 types: [],
-                /** weight in hectograms */
                 weight: NaN,
                 forms: [],
                 evolutions: [],
@@ -47,8 +45,6 @@ class Pokedex extends React.Component {
             desc: '',
             /** flip image */
             flipImage: false,
-            /** TODO: previous button */
-            prevPokemon: NaN,
         };
         this.getPokemon = this.getPokemon.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
@@ -79,10 +75,6 @@ class Pokedex extends React.Component {
      * @param prevState
      */
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.pokemon.id !== this.state.pokemon.id) {
-            // console.log('id changed!')
-            // this.setState({ prevPokemon: prevState.pokemon.id });
-        }
     }
 
     /**
