@@ -64,6 +64,7 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
+        console.log('I mounted')
         this.getPokemon(this.props.match.params.name);
         {/** TODO: move task to parent component */}
         this.getPokemonList();
@@ -75,6 +76,9 @@ class Pokedex extends React.Component {
      * @param prevState
      */
     componentDidUpdate(prevProps, prevState) {
+        if (!this.state.isLoadingSingle && this.props.match.params.name !== this.state.pokemon.name) {
+            this.setState({ isLoadingSingle: true }, () => this.getPokemon(this.props.match.params.name));
+        }
     }
 
     /**
@@ -318,14 +322,14 @@ class Pokedex extends React.Component {
 
     handleSearchSelect(event, data) {
         this.setState({ searchQuery: data.result.title });
-        this.setState({ isLoadingSingle: true }, () => this.getPokemon(this.state.searchQuery));
+        // this.setState({ isLoadingSingle: true }, () => this.getPokemon(this.state.searchQuery));
         const path = `/search/pokemon/${data.result.title}`;
         this.props.history.push(path);
     }
 
     handleDropdown(event, data) {
         if (data.value !== this.state.pokemon.name) {
-            this.setState({ isLoadingSingle: true }, () => this.getPokemon(data.value));
+            // this.setState({ isLoadingSingle: true }, () => this.getPokemon(data.value));
             const path = `/search/pokemon/${data.value}`;
             this.props.history.push(path);
         }
