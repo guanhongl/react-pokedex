@@ -14,6 +14,7 @@ class List extends React.Component {
         this.state = {
             pokemonList: [],
             pokemonData: [],
+            isLoadingData: true,
         };
     }
 
@@ -34,13 +35,22 @@ class List extends React.Component {
                         const results = response.data.results;
                         const pokemonList = _.pluck(results, "name");
                         this.setState({ pokemonList });
-                        const pokemonData = [];
-                        for (let i = 0; i < limit; i++) {
-                            pokemonData.push({});
-                        }
-                        this.setState({ pokemonData }, () =>
-                            pokemonList.forEach((pokemon, index) => this.getPokemonData(pokemon, index))
+                        const promises = pokemonList.map((name) =>
+                            axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
                         );
+                        Promise.all(promises)
+                            .then(responses => {
+                                const pokemonData = responses.map(response => ({
+                                    id: response.data.id,
+                                    name: response.data.name,
+                                    sprite: response.data.sprites.front_default,
+                                    types: _.pluck(_.pluck(response.data.types, 'type'), 'name')
+                                }));
+                                this.setState({ pokemonData, isLoadingData: false });
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
                     })
                     .catch(error => {
                         console.log(error);
@@ -51,27 +61,8 @@ class List extends React.Component {
             });
     }
 
-    getPokemonData(name, index) {
-        axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
-            .then(response => {
-                const data = response.data;
-                const pokemon = {
-                    id: data.id,
-                    name: data.name,
-                    sprite: data.sprites.front_default,
-                    types: _.pluck(_.pluck(data.types, 'type'), 'name')
-                };
-                const pokemonData = this.state.pokemonData;
-                pokemonData[index] = pokemon;
-                this.setState({ pokemonData });
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-
     render() {
-        if (this.state.pokemonList.length === 0) {
+        if (this.state.pokemonList.length === 0 || this.state.isLoadingData) {
             return <Loader active inline='centered'>Getting List...</Loader>
         }
         return(
