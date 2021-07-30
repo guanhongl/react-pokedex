@@ -5,6 +5,7 @@ import TopMenu from './topmenu';
 import Footer from './footer';
 import Home from './home';
 import List from './list';
+import ErrorPage from './errorpage';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 class App extends React.Component {
@@ -22,6 +23,9 @@ class App extends React.Component {
                         </Route>
                         <Route exact path='/list'>
                             <List />
+                        </Route>
+                        <Route path='*'>
+                            <ErrorPage />
                         </Route>
                     </Switch>
                     <Footer/>
