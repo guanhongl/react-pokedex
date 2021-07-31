@@ -1,0 +1,92 @@
+[
+  {
+    "name": "$normal",
+    "value": "#A8A77A",
+    "compiledValue": "#A8A77A"
+  },
+  {
+    "name": "$fire",
+    "value": "#EE8130",
+    "compiledValue": "#EE8130"
+  },
+  {
+    "name": "$water",
+    "value": "#6390F0",
+    "compiledValue": "#6390F0"
+  },
+  {
+    "name": "$electric",
+    "value": "#F7D02C",
+    "compiledValue": "#F7D02C"
+  },
+  {
+    "name": "$grass",
+    "value": "#7AC74C",
+    "compiledValue": "#7AC74C"
+  },
+  {
+    "name": "$ice",
+    "value": "#96D9D6",
+    "compiledValue": "#96D9D6"
+  },
+  {
+    "name": "$fighting",
+    "value": "#C22E28",
+    "compiledValue": "#C22E28"
+  },
+  {
+    "name": "$poison",
+    "value": "#A33EA1",
+    "compiledValue": "#A33EA1"
+  },
+  {
+    "name": "$ground",
+    "value": "#E2BF65",
+    "compiledValue": "#E2BF65"
+  },
+  {
+    "name": "$flying",
+    "value": "#A98FF3",
+    "compiledValue": "#A98FF3"
+  },
+  {
+    "name": "$psychic",
+    "value": "#F95587",
+    "compiledValue": "#F95587"
+  },
+  {
+    "name": "$bug",
+    "value": "#A6B91A",
+    "compiledValue": "#A6B91A"
+  },
+  {
+    "name": "$rock",
+    "value": "#B6A136",
+    "compiledValue": "#B6A136"
+  },
+  {
+    "name": "$ghost",
+    "value": "#735797",
+    "compiledValue": "#735797"
+  },
+  {
+    "name": "$dragon",
+    "value": "#6F35FC",
+    "compiledValue": "#6F35FC"
+  },
+  {
+    "name": "$dark",
+    "value": "#705746",
+    "compiledValue": "#705746"
+  },
+  {
+    "name": "$steel",
+    "value": "#B7B7CE",
+    "compiledValue": "#B7B7CE"
+  },
+  {
+    "name": "$fairy",
+    "value": "#D685AD",
+    "compiledValue": "#D685AD"
+  }
+]

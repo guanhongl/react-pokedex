@@ -2,8 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Button, Container, Dropdown, Grid, Header, Image, Label, Loader, Placeholder, Search,
-         Checkbox } from 'semantic-ui-react';
+import { Button, Container, Dropdown, Grid, Header, Image, Label, Loader, Search, Checkbox, Icon } from 'semantic-ui-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import * as _ from 'underscore';
@@ -92,6 +91,7 @@ class Pokedex extends React.Component {
                 this.setPokemon(response.data);
             })
             .catch(error => {
+                /** TODO: error popup */
                 console.log(error);
             });
     }
@@ -460,6 +460,7 @@ class Pokedex extends React.Component {
                                                                 onClick={() => this.handleAbilityClick(ability, pokemon.abilities[ability])}
                                                             >
                                                                 {ability.toUpperCase()}
+                                                                <Icon name='info circle' className='top-right-icon' />
                                                             </Button>);
                                                 })
                                             }

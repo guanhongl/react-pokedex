@@ -51,7 +51,7 @@ class Evolutions extends React.Component {
         // console.log('id',id[0])
         // console.log('prop', this.props.currentId)
         // console.log(id[0] == this.props.currentId)
-        if (id[0] != this.props.currentId) {
+        if (id[0] !== this.props.currentId) {
             // this.props.getPokemon(id);
             this.idToName(id);
         }

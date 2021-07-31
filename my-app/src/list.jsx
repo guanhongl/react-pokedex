@@ -1,7 +1,8 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Image, Container, Loader, Card } from 'semantic-ui-react';
+import colors from './variables.json'
+import { Image, Container, Loader, Card, Grid, Search, Dropdown } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -61,13 +62,84 @@ class List extends React.Component {
             });
     }
 
+    getGradient(type1, type2) {
+        const color1 = colors.find(color => color.name.includes(type1)).value;
+        const color2 = colors.find(color => color.name.includes(type2)).value;
+
+        return `linear-gradient(to right, ${color1} 50%, ${color2} 50%)`;
+    }
+
+    getColor(type) {
+        return colors.find(color => color.name.includes(type)).value;
+    }
+
     render() {
         if (this.state.pokemonList.length === 0 || this.state.isLoadingData) {
-            return <Loader active inline='centered'>Getting List...</Loader>
+            return <Loader id='list-loader' active inline='centered'>Getting List...</Loader>
         }
         return(
-            <Container>
-
+            <Container id='list-container'>
+                <Grid stackable>
+                    <Grid.Row columns={3}>
+                        <Grid.Column></Grid.Column>
+                        <Grid.Column>
+                            <Search
+                                fluid
+                                input={{fluid: true}}
+                                loading={false}
+                                // onResultSelect={(event, data) => this.handleSearchSelect(event, data)}
+                                // onSearchChange={(event, data) => this.handleSearchChange(event, data)}
+                                // results={this.state.searchResults}
+                                // value={this.state.searchQuery}
+                                placeholder='Search for Pokemon...'
+                                noResultsMessage='No Pokemon found.'
+                            />
+                        </Grid.Column>
+                        <Grid.Column textAlign={'right'}>
+                            {
+                                <Dropdown
+                                    placeholder='Sort by...'
+                                    selection
+                                    // options={pokemon.forms.map(form => ({
+                                    //     key: form,
+                                    //     text: form,
+                                    //     value: form
+                                    // }))}
+                                    // onChange={(event, data) => this.handleDropdown(event, data)}
+                                />
+                            }
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+                <Card.Group itemsPerRow={6} doubling={true}>
+                    {
+                        this.state.pokemonData.map((pokemon, index) => {
+                            if (index < 151) {
+                                return (
+                                    <Card
+                                        key={pokemon.id}
+                                        style={{
+                                            background: pokemon.types.length > 1 ?
+                                                this.getGradient(pokemon.types[0], pokemon.types[1])
+                                                :
+                                                this.getColor(pokemon.types[0])
+                                        }}
+                                    >
+                                        <Card.Content textAlign={'center'}>
+                                            <Image src={pokemon.sprite} />
+                                            <div className='card-header'>
+                                                {pokemon.name}
+                                                <span>
+                                                    #{pokemon.id.toString().padStart(3, '0')}
+                                                </span>
+                                            </div>
+                                        </Card.Content>
+                                    </Card>
+                                );
+                            }
+                        })
+                    }
+                </Card.Group>
             </Container>
         );
     }

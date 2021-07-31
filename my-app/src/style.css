@@ -175,6 +175,13 @@ body {
 #pokedex .card .ability-button {
   background-color: inherit;
   font-size: 12px;
+  position: relative;
+}
+#pokedex .card .ability-button i {
+  position: absolute;
+  top: 5px;
+  right: 3px;
+  margin: 0;
 }
 #pokedex .card img {
   cursor: pointer;
@@ -260,6 +267,22 @@ body {
 
 #footer {
   border-top: darkgray 1px solid;
+}
+
+#list-container {
+  margin: 50px 0;
+}
+#list-container .card > .content .card-header {
+  font-weight: bold;
+  color: whitesmoke;
+}
+#list-container .card > .content span {
+  margin-left: 3px;
+  font-weight: initial;
+}
+
+#list-loader {
+  margin: 50px 0;
 }
 
 /*# sourceMappingURL=style.css.map */
