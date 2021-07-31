@@ -303,20 +303,50 @@ body {
 #list-container {
     margin: 50px 0;
 
+    .ui.cards {
+        margin-top: 50px;
+    }
+
     .card {
+        //position: relative;
+        //width: calc(16.66666667% - 1.5em);
+
         >.content {
+            //position: absolute;
+            //top: 0;
+            //right: 0;
+            //bottom: 0;
+            //left: 0;
+
             .card-header {
                 font-weight: bold;
-                color: whitesmoke;
+                color: #f5f5f5;
             }
             span {
                 margin-left: 3px;
                 font-weight: initial;
             }
+            .type-button {
+                color: #f5f5f5;
+                background-color: rgba(0,0,0,0);
+                width: 49px;
+                cursor: unset;
+                font-size: 9px;
+                padding: 3px 0;
+            }
         }
     }
+    //.card:before {
+    //    content: '';
+    //    display: block;
+    //    padding-top: 100%;
+    //}
 }
 
 #list-loader {
     margin: 50px 0;
+}
+
+#card-loader {
+    margin-top: 50px;
 }

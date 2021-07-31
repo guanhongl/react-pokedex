@@ -272,17 +272,32 @@ body {
 #list-container {
   margin: 50px 0;
 }
+#list-container .ui.cards {
+  margin-top: 50px;
+}
 #list-container .card > .content .card-header {
   font-weight: bold;
-  color: whitesmoke;
+  color: #f5f5f5;
 }
 #list-container .card > .content span {
   margin-left: 3px;
   font-weight: initial;
 }
+#list-container .card > .content .type-button {
+  color: #f5f5f5;
+  background-color: rgba(0, 0, 0, 0);
+  width: 49px;
+  cursor: unset;
+  font-size: 9px;
+  padding: 3px 0;
+}
 
 #list-loader {
   margin: 50px 0;
+}
+
+#card-loader {
+  margin-top: 50px;
 }
 
 /*# sourceMappingURL=style.css.map */

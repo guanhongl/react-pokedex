@@ -1,8 +1,9 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
 import colors from './variables.json'
-import { Image, Container, Loader, Card, Grid, Search, Dropdown } from 'semantic-ui-react';
+import { Image, Container, Loader, Card, Grid, Input, Dropdown, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -16,6 +17,9 @@ class List extends React.Component {
             pokemonList: [],
             pokemonData: [],
             isLoadingData: true,
+            filteredData: [],
+            searchQuery: '',
+            cardLoader: false,
         };
     }
 
@@ -47,7 +51,7 @@ class List extends React.Component {
                                     sprite: response.data.sprites.front_default,
                                     types: _.pluck(_.pluck(response.data.types, 'type'), 'name')
                                 }));
-                                this.setState({ pokemonData, isLoadingData: false });
+                                this.setState({ pokemonData, filteredData: pokemonData, isLoadingData: false });
                             })
                             .catch(error => {
                                 console.log(error);
@@ -60,6 +64,39 @@ class List extends React.Component {
             .catch(error => {
                 console.log(error);
             });
+    }
+
+    handleSearch(event, data) {
+        this.setState({ cardLoader: true });
+        // this.setState({ searchQuery: data.value });
+        _.debounce(this.setState({ searchQuery: data.value }), 500);
+        const filteredData = this.state.pokemonData.filter(pokemon => pokemon.name.includes(data.value.toLowerCase()));
+        this.setState({ filteredData });
+        setTimeout(() => this.setState({ cardLoader: false }), 0);
+        // _.debounce(this.setState({ filteredData }), 500);
+    }
+
+    handleDropdown(event, data) {
+        {/** TODO: better logic? */}
+        const filteredData = this.state.filteredData;
+        if (filteredData.length > 0) {
+            if (data.value === 'descend' && filteredData[0].id < filteredData[filteredData.length -1].id) {
+                this.setState({ cardLoader: true })
+                this.setState({ filteredData: filteredData.reverse() });
+                setTimeout(() => this.setState({ cardLoader: false }), 0);
+            }
+            else if (filteredData[0].id > filteredData[filteredData.length -1].id) {
+                this.setState({ cardLoader: true })
+                this.setState({ filteredData: filteredData.reverse() });
+                setTimeout(() => this.setState({ cardLoader: false }), 0);
+            }
+        }
+
+    }
+
+    getPokemon(name) {
+        const path = `/search/pokemon/${name}`;
+        this.props.history.push(path);
     }
 
     getGradient(type1, type2) {
@@ -83,16 +120,13 @@ class List extends React.Component {
                     <Grid.Row columns={3}>
                         <Grid.Column></Grid.Column>
                         <Grid.Column>
-                            <Search
+                            <Input
+                                icon='search'
+                                placeholder='Search...'
                                 fluid
-                                input={{fluid: true}}
-                                loading={false}
-                                // onResultSelect={(event, data) => this.handleSearchSelect(event, data)}
-                                // onSearchChange={(event, data) => this.handleSearchChange(event, data)}
-                                // results={this.state.searchResults}
-                                // value={this.state.searchQuery}
-                                placeholder='Search for Pokemon...'
-                                noResultsMessage='No Pokemon found.'
+                                onChange={this.handleSearch.bind(this)}
+                                value={this.state.searchQuery}
+                                loading={this.state.cardLoader}
                             />
                         </Grid.Column>
                         <Grid.Column textAlign={'right'}>
@@ -100,49 +134,82 @@ class List extends React.Component {
                                 <Dropdown
                                     placeholder='Sort by...'
                                     selection
-                                    // options={pokemon.forms.map(form => ({
-                                    //     key: form,
-                                    //     text: form,
-                                    //     value: form
-                                    // }))}
-                                    // onChange={(event, data) => this.handleDropdown(event, data)}
+                                    options={
+                                        [
+                                            {
+                                                key: 0,
+                                                text: '',
+                                                value: ''
+                                            },
+                                            {
+                                                key: 'ascend',
+                                                text: 'ascending',
+                                                value: 'ascend'
+                                            },
+                                            {
+                                                key: 'descend',
+                                                text: 'descending',
+                                                value: 'descend'
+                                            }
+                                        ]
+                                    }
+                                    onChange={this.handleDropdown.bind(this)}
                                 />
                             }
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-                <Card.Group itemsPerRow={6} doubling={true}>
-                    {
-                        this.state.pokemonData.map((pokemon, index) => {
-                            if (index < 151) {
-                                return (
-                                    <Card
-                                        key={pokemon.id}
-                                        style={{
-                                            background: pokemon.types.length > 1 ?
-                                                this.getGradient(pokemon.types[0], pokemon.types[1])
-                                                :
-                                                this.getColor(pokemon.types[0])
-                                        }}
-                                    >
-                                        <Card.Content textAlign={'center'}>
-                                            <Image src={pokemon.sprite} />
-                                            <div className='card-header'>
-                                                {pokemon.name}
-                                                <span>
+                {
+                    this.state.cardLoader ?
+                        <Loader id='card-loader' active={this.state.cardLoader} inline='centered' />
+                        :
+                    <Card.Group itemsPerRow={6} doubling={true}>
+                        {
+                            this.state.filteredData.map((pokemon, index) => {
+                                if (index < 900) {
+                                    return (
+                                        <Card
+                                            key={pokemon.id}
+                                            style={{
+                                                background: pokemon.types.length > 1 ?
+                                                    this.getGradient(pokemon.types[0], pokemon.types[1])
+                                                    :
+                                                    this.getColor(pokemon.types[0])
+                                            }}
+                                            onClick={() => this.getPokemon(pokemon.name)}
+                                        >
+                                            <Card.Content textAlign={'center'}>
+                                                <Image src={pokemon.sprite}/>
+                                                <div className='card-header'>
+                                                    {pokemon.name}
+                                                    <span>
                                                     #{pokemon.id.toString().padStart(3, '0')}
                                                 </span>
-                                            </div>
-                                        </Card.Content>
-                                    </Card>
-                                );
-                            }
-                        })
-                    }
-                </Card.Group>
+                                                </div>
+                                                <Button.Group>
+                                                    {
+                                                        pokemon.types.map(type =>
+                                                            <Button
+                                                                size={'mini'}
+                                                                className={`type-button`}
+                                                                key={_.uniqueId('TYPE_')}
+                                                            >
+                                                                {type.toUpperCase()}
+                                                            </Button>
+                                                        )
+                                                    }
+                                                </Button.Group>
+                                            </Card.Content>
+                                        </Card>
+                                    );
+                                }
+                            })
+                        }
+                    </Card.Group>
+                }
             </Container>
         );
     }
 }
 
-export default List;
+export default withRouter(List);
