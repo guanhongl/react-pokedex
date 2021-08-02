@@ -272,12 +272,16 @@ body {
 #list-container {
   margin: 50px 0;
 }
+#list-container input {
+  border-radius: 500rem;
+}
 #list-container .ui.cards {
   margin-top: 50px;
 }
 #list-container .card > .content .card-header {
   font-weight: bold;
   color: #f5f5f5;
+  white-space: nowrap;
 }
 #list-container .card > .content span {
   margin-left: 3px;

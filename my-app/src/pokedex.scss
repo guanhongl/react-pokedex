@@ -303,6 +303,10 @@ body {
 #list-container {
     margin: 50px 0;
 
+    input {
+        border-radius: 500rem;
+    }
+
     .ui.cards {
         margin-top: 50px;
     }
@@ -321,6 +325,7 @@ body {
             .card-header {
                 font-weight: bold;
                 color: #f5f5f5;
+                white-space: nowrap;
             }
             span {
                 margin-left: 3px;

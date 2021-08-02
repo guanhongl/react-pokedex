@@ -63,7 +63,6 @@ class Pokedex extends React.Component {
      * fires on component mount
      */
     componentDidMount() {
-        console.log('I mounted')
         this.getPokemon(this.props.match.params.name);
         {/** TODO: move task to parent component */}
         this.getPokemonList();

@@ -27,6 +27,26 @@ class List extends React.Component {
         this.getPokemonList();
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        /** if first render, or if filtered AND if cards are rendered */
+        if ((prevState.isLoadingData || prevState.cardLoader && !this.state.cardLoader) &&
+            document.querySelectorAll('.card-header').length > 0) {
+            this.handleOverflow();
+        }
+    }
+
+    /** DOM manipulation */
+    handleOverflow() {
+        const filteredData = this.state.filteredData;
+        const elements = document.querySelectorAll('.card-header');
+        elements.forEach((element, index) => {
+            if (element.scrollWidth > element.clientWidth && filteredData[index].name.includes('-')) {
+                filteredData[index].name = filteredData[index].name.slice(0, filteredData[index].name.indexOf('-'));
+            }
+        });
+        this.setState({ filteredData });
+    }
+
     /**
      * populate PokemonList w/ pokemon names
      */
@@ -70,7 +90,10 @@ class List extends React.Component {
         this.setState({ cardLoader: true });
         // this.setState({ searchQuery: data.value });
         _.debounce(this.setState({ searchQuery: data.value }), 500);
-        const filteredData = this.state.pokemonData.filter(pokemon => pokemon.name.includes(data.value.toLowerCase()));
+        /** parse, stringify used to deep clone array */
+        const filteredData = JSON.parse(JSON.stringify(this.state.pokemonData)).filter(pokemon =>
+            pokemon.name.includes(data.value.toLowerCase())
+        );
         this.setState({ filteredData });
         setTimeout(() => this.setState({ cardLoader: false }), 0);
         // _.debounce(this.setState({ filteredData }), 500);
@@ -95,8 +118,9 @@ class List extends React.Component {
     }
 
     getPokemon(name) {
-        const path = `/search/pokemon/${name}`;
-        this.props.history.push(path);
+        // const path = `/search/pokemon/${name}`;
+        // this.props.history.push(path);
+        window.open(`/search/pokemon/${name}`, '_blank').focus();
     }
 
     getGradient(type1, type2) {
@@ -132,7 +156,7 @@ class List extends React.Component {
                         <Grid.Column textAlign={'right'}>
                             {
                                 <Dropdown
-                                    placeholder='Sort by...'
+                                    placeholder='Sort by number...'
                                     selection
                                     options={
                                         [
@@ -183,8 +207,8 @@ class List extends React.Component {
                                                 <div className='card-header'>
                                                     {pokemon.name}
                                                     <span>
-                                                    #{pokemon.id.toString().padStart(3, '0')}
-                                                </span>
+                                                        #{pokemon.id.toString().padStart(3, '0')}
+                                                    </span>
                                                 </div>
                                                 <Button.Group>
                                                     {

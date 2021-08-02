@@ -20,6 +20,7 @@ class TopMenu extends React.Component {
             <Menu pointing secondary id='top-menu'>
                 <Link to='/'>
                     <Menu.Item
+                        as='div'
                         active={this.state.activeItem === 'home'}
                         onClick={() => this.setState({ activeItem: 'home' })}
                     >
@@ -30,12 +31,14 @@ class TopMenu extends React.Component {
                     </Menu.Item>
                 </Link>
                 <Menu.Item
+                    as='div'
                     position='right'
                     active={this.state.activeItem === 'single'}
                 >
                     <Link to='/search/pokemon/pikachu' onClick={() => this.setState({ activeItem: 'single' })}>Search</Link>
                 </Menu.Item>
                 <Menu.Item
+                    as='div'
                     active={this.state.activeItem === 'about'}
                 >
                     <Link to='/list' onClick={() => this.setState({ activeItem: 'about' })}>List View</Link>
