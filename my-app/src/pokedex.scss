@@ -313,6 +313,12 @@ body {
 
     .card {
         //position: relative;
+        //@media only screen and (max-width: 767px) {
+        //    width: calc( 50% - 2em );
+        //}
+        //@media only screen and (min-width: 768px) and (max-width: 991px) {
+        //    width: calc( 33.33333333%  -  2em );
+        //}
         //width: calc(16.66666667% - 1.5em);
 
         >.content {

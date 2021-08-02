@@ -117,9 +117,10 @@ class List extends React.Component {
 
     }
 
-    getPokemon(name) {
+    getPokemon(id) {
         // const path = `/search/pokemon/${name}`;
         // this.props.history.push(path);
+        const name = this.state.pokemonList[id - 1];
         window.open(`/search/pokemon/${name}`, '_blank').focus();
     }
 
@@ -200,7 +201,7 @@ class List extends React.Component {
                                                     :
                                                     this.getColor(pokemon.types[0])
                                             }}
-                                            onClick={() => this.getPokemon(pokemon.name)}
+                                            onClick={() => this.getPokemon(pokemon.id)}
                                         >
                                             <Card.Content textAlign={'center'}>
                                                 <Image src={pokemon.sprite}/>
