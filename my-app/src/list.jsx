@@ -21,18 +21,21 @@ class List extends React.Component {
             searchQuery: '',
             cardLoader: false,
         };
+        this.debouncedOverflow = this.debouncedOverflow.bind(this);
+        this.handleOverflow = this.handleOverflow.bind(this);
     }
 
     componentDidMount() {
         this.getPokemonList();
+        window.addEventListener('resize', this.debouncedOverflow);
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        /** if first render, or if filtered AND if cards are rendered */
-        if ((prevState.isLoadingData || prevState.cardLoader && !this.state.cardLoader) &&
-            document.querySelectorAll('.card-header').length > 0) {
-            this.handleOverflow();
-        }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.debouncedOverflow);
+    }
+
+    debouncedOverflow() {
+        _.debounce(this.handleOverflow, 500, false)();
     }
 
     /** DOM manipulation */
@@ -71,7 +74,12 @@ class List extends React.Component {
                                     sprite: response.data.sprites.front_default,
                                     types: _.pluck(_.pluck(response.data.types, 'type'), 'name')
                                 }));
-                                this.setState({ pokemonData, filteredData: pokemonData, isLoadingData: false });
+                                this.setState({
+                                    pokemonData,
+                                    filteredData: JSON.parse(JSON.stringify(pokemonData)),
+                                    isLoadingData: false
+                                });
+                                this.handleOverflow();
                             })
                             .catch(error => {
                                 console.log(error);
@@ -88,15 +96,13 @@ class List extends React.Component {
 
     handleSearch(event, data) {
         this.setState({ cardLoader: true });
-        // this.setState({ searchQuery: data.value });
-        _.debounce(this.setState({ searchQuery: data.value }), 500);
+        this.setState({ searchQuery: data.value });
         /** parse, stringify used to deep clone array */
         const filteredData = JSON.parse(JSON.stringify(this.state.pokemonData)).filter(pokemon =>
             pokemon.name.includes(data.value.toLowerCase())
         );
         this.setState({ filteredData });
         setTimeout(() => this.setState({ cardLoader: false }), 0);
-        // _.debounce(this.setState({ filteredData }), 500);
     }
 
     handleDropdown(event, data) {
