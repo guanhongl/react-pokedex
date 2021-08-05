@@ -21,32 +21,44 @@ class List extends React.Component {
             searchQuery: '',
             cardLoader: false,
         };
-        this.debouncedOverflow = this.debouncedOverflow.bind(this);
         this.handleOverflow = this.handleOverflow.bind(this);
+
+        const resizer = new ResizeObserver(this.handleOverflow);
+        this.attachResizer = element => {
+            if (element) {
+                resizer.observe(element);
+            }
+        }
     }
 
     componentDidMount() {
         this.getPokemonList();
-        window.addEventListener('resize', this.debouncedOverflow);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.debouncedOverflow);
     }
 
-    debouncedOverflow() {
-        _.debounce(this.handleOverflow, 500, false)();
-    }
+    handleOverflow(entries) {
+        // console.log('resized')
+        /** maxWidth is static */
+        const maxWidth = 230;
+        const width = entries[0].contentRect.width;
+        const filteredData = JSON.parse(JSON.stringify(this.state.filteredData));
+        if (entries.length === filteredData.length) {
+            entries.forEach((entry, index) => {
+                const id = entry.target.id;
+                /** if name can be shortened */
+                if (this.state.pokemonList[id - 1].includes('-')) {
+                    /** reset name */
+                    filteredData[index].name = this.state.pokemonList[id - 1];
 
-    /** DOM manipulation */
-    handleOverflow() {
-        const filteredData = this.state.filteredData;
-        const elements = document.querySelectorAll('.card-header');
-        elements.forEach((element, index) => {
-            if (element.scrollWidth > element.clientWidth && filteredData[index].name.includes('-')) {
-                filteredData[index].name = filteredData[index].name.slice(0, filteredData[index].name.indexOf('-'));
-            }
-        });
+                    /** if maxWidth > width, shorten name */
+                    if (maxWidth > width) {
+                        filteredData[index].name = filteredData[index].name.split('-')[0];
+                    }
+                }
+            });
+        }
         this.setState({ filteredData });
     }
 
@@ -74,12 +86,7 @@ class List extends React.Component {
                                     sprite: response.data.sprites.front_default,
                                     types: _.pluck(_.pluck(response.data.types, 'type'), 'name')
                                 }));
-                                this.setState({
-                                    pokemonData,
-                                    filteredData: JSON.parse(JSON.stringify(pokemonData)),
-                                    isLoadingData: false
-                                });
-                                this.handleOverflow();
+                                this.setState({ pokemonData, filteredData: pokemonData, isLoadingData: false });
                             })
                             .catch(error => {
                                 console.log(error);
@@ -98,7 +105,7 @@ class List extends React.Component {
         this.setState({ cardLoader: true });
         this.setState({ searchQuery: data.value });
         /** parse, stringify used to deep clone array */
-        const filteredData = JSON.parse(JSON.stringify(this.state.pokemonData)).filter(pokemon =>
+        const filteredData = this.state.pokemonData.filter(pokemon =>
             pokemon.name.includes(data.value.toLowerCase())
         );
         this.setState({ filteredData });
@@ -199,7 +206,10 @@ class List extends React.Component {
                             this.state.filteredData.map((pokemon, index) => {
                                 if (index < 900) {
                                     return (
-                                        <Card
+                                        <div
+                                            class='ui card'
+                                            ref={this.attachResizer}
+                                            id={pokemon.id}
                                             key={pokemon.id}
                                             style={{
                                                 background: pokemon.types.length > 1 ?
@@ -231,7 +241,7 @@ class List extends React.Component {
                                                     }
                                                 </Button.Group>
                                             </Card.Content>
-                                        </Card>
+                                        </div>
                                     );
                                 }
                             })
