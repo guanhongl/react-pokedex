@@ -13,7 +13,7 @@ class App extends React.Component {
         return (
             <Router>
                 <div>
-                    <TopMenu/>
+                    <TopMenu />
                     <Switch>
                         <Route exact path='/'>
                             <Home />
@@ -28,7 +28,7 @@ class App extends React.Component {
                             <ErrorPage />
                         </Route>
                     </Switch>
-                    <Footer/>
+                    <Footer />
                 </div>
             </Router>
         );

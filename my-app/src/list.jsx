@@ -29,6 +29,7 @@ class List extends React.Component {
                 resizer.observe(element);
             }
         }
+        this.clearResizer = () => resizer.disconnect();
     }
 
     componentDidMount() {
@@ -36,10 +37,11 @@ class List extends React.Component {
     }
 
     componentWillUnmount() {
+        this.clearResizer();
     }
 
     handleOverflow(entries) {
-        // console.log('resized')
+        console.log('resized')
         /** maxWidth is static */
         const maxWidth = 230;
         const width = entries[0].contentRect.width;
@@ -86,7 +88,7 @@ class List extends React.Component {
                                     sprite: response.data.sprites.front_default,
                                     types: _.pluck(_.pluck(response.data.types, 'type'), 'name')
                                 }));
-                                this.setState({ pokemonData, filteredData: pokemonData, isLoadingData: false });
+                                this.setState({ pokemonData, isLoadingData: false }, this.filterData.bind(this));
                             })
                             .catch(error => {
                                 console.log(error);
@@ -101,33 +103,43 @@ class List extends React.Component {
             });
     }
 
-    handleSearch(event, data) {
-        this.setState({ cardLoader: true });
-        this.setState({ searchQuery: data.value });
+    filterData() {
         /** parse, stringify used to deep clone array */
         const filteredData = this.state.pokemonData.filter(pokemon =>
-            pokemon.name.includes(data.value.toLowerCase())
+            /** TODO: if filter by maxlength = id, add id condition */
+            pokemon.name.includes(this.state.searchQuery.toLowerCase())
         );
         this.setState({ filteredData });
         setTimeout(() => this.setState({ cardLoader: false }), 0);
     }
 
+    handleSearch(event, data) {
+        this.setState({ cardLoader: true });
+        this.setState({ searchQuery: data.value }, this.filterData.bind(this));
+    }
+
+    reverseData() {
+        this.setState({ cardLoader: true })
+        this.setState({ filteredData: this.state.filteredData.reverse() });
+        setTimeout(() => this.setState({ cardLoader: false }), 0);
+    }
+
     handleDropdown(event, data) {
-        {/** TODO: better logic? */}
         const filteredData = this.state.filteredData;
-        if (filteredData.length > 0) {
-            if (data.value === 'descend' && filteredData[0].id < filteredData[filteredData.length -1].id) {
-                this.setState({ cardLoader: true })
-                this.setState({ filteredData: filteredData.reverse() });
-                setTimeout(() => this.setState({ cardLoader: false }), 0);
+        if (filteredData.length > 1) {
+            /** if in order */
+            if (filteredData[filteredData.length - 1].id > filteredData[0].id ) {
+                if (data.value === 'descend') {
+                    this.reverseData();
+                }
             }
-            else if (filteredData[0].id > filteredData[filteredData.length -1].id) {
-                this.setState({ cardLoader: true })
-                this.setState({ filteredData: filteredData.reverse() });
-                setTimeout(() => this.setState({ cardLoader: false }), 0);
+            /** if not in order */
+            else {
+                if (data.value === 'ascend') {
+                    this.reverseData();
+                }
             }
         }
-
     }
 
     getPokemon(id) {
@@ -177,7 +189,7 @@ class List extends React.Component {
                                             {
                                                 key: 0,
                                                 text: '',
-                                                value: ''
+                                                value: 'ascend'
                                             },
                                             {
                                                 key: 'ascend',
@@ -204,9 +216,9 @@ class List extends React.Component {
                     <Card.Group itemsPerRow={6} doubling={true}>
                         {
                             this.state.filteredData.map((pokemon, index) => {
-                                if (index < 900) {
+                                if (pokemon.id < 152) {
                                     return (
-                                        <div
+                                        <a
                                             class='ui card'
                                             ref={this.attachResizer}
                                             id={pokemon.id}
@@ -241,7 +253,7 @@ class List extends React.Component {
                                                     }
                                                 </Button.Group>
                                             </Card.Content>
-                                        </div>
+                                        </a>
                                     );
                                 }
                             })
