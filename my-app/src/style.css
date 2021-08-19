@@ -163,6 +163,16 @@ body {
   padding-top: 10px;
   padding-bottom: 15px;
 }
+#pokedex .card .sprite-div {
+  position: relative;
+}
+#pokedex .card .sprite-div i {
+  position: absolute;
+  top: 0px;
+  right: calc(50% - 75px);
+  color: #666666;
+  cursor: pointer;
+}
 #pokedex .card .card-header {
   margin-top: 0;
   margin-bottom: 10px;
@@ -183,9 +193,6 @@ body {
   top: 5px;
   right: 3px;
   margin: 0;
-}
-#pokedex .card img {
-  cursor: pointer;
 }
 #pokedex .bar-chart {
   font-weight: bold;

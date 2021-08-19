@@ -424,9 +424,14 @@ class Pokedex extends React.Component {
                                 <Grid.Column>
                                     <div className='card'>
                                         {/** sprites */}
-                                        <Image src={this.state.flipImage && pokemon.sprites[1] ?
-                                                    pokemon.sprites[1] : pokemon.sprites[0]} centered size='small'
-                                               onClick={() => this.setState({ flipImage: !this.state.flipImage })} />
+                                        <div className='sprite-div'>
+                                            <Image src={this.state.flipImage && pokemon.sprites[1] ?
+                                                        pokemon.sprites[1] : pokemon.sprites[0]} centered size='small' />
+                                            <Icon
+                                                name='sync alternate'
+                                                onClick={() => this.setState({ flipImage: !this.state.flipImage })}
+                                            />
+                                        </div>
                                         {/** name + id */}
                                         <Header as='h2' className='card-header'>
                                             {pokemon.name} #{pokemon.id}

@@ -166,6 +166,18 @@ body {
         padding-top: 10px;
         padding-bottom: 15px;
 
+        .sprite-div {
+            position: relative;
+
+            i {
+                position: absolute;
+                top: 0px;
+                right: calc(50% - 75px);
+                color: rgb(102, 102, 102);
+                cursor: pointer;
+            }
+        }
+
         .card-header {
             margin-top: 0;
             margin-bottom: 10px;
@@ -189,10 +201,6 @@ body {
                 right: 3px;
                 margin: 0;
             }
-        }
-
-        img {
-            cursor: pointer;
         }
     }
 
