@@ -20,20 +20,42 @@ class List extends React.Component {
             filteredData: [],
             searchQuery: '',
             cardLoader: false,
+            maxCards: 150,
+            // isLoadingMore: true,
         };
         this.handleOverflow = this.handleOverflow.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
 
         const resizer = new ResizeObserver(this.handleOverflow);
         this.attachResizer = element => {
             if (element) {
                 resizer.observe(element);
             }
-        }
+        };
         this.clearResizer = () => resizer.disconnect();
+
+        const observer = new IntersectionObserver(this.handleScroll, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1,
+        });
+        this.attachObserver = element => {
+            if (element) {
+                observer.observe(element);
+            }
+        };
     }
 
     componentDidMount() {
         this.getPokemonList();
+    }
+
+    componentDidUpdate() {
+        // if (this.state.isLoadingMore) {
+        //     setTimeout(
+        //         () => this.setState({ maxCards: this.state.maxCards + 150, isLoadingMore: false })
+        //     , 0);
+        // }
     }
 
     componentWillUnmount() {
@@ -41,7 +63,6 @@ class List extends React.Component {
     }
 
     handleOverflow(entries) {
-        console.log('resized')
         /** maxWidth is static */
         const maxWidth = 230;
         const width = entries[0].contentRect.width;
@@ -62,6 +83,13 @@ class List extends React.Component {
             });
         }
         this.setState({ filteredData });
+    }
+
+    handleScroll(entries) {
+        if (entries[0].isIntersecting) {
+            console.log('load more')
+            this.setState({ maxCards: this.state.maxCards + 150 });
+        }
     }
 
     /**
@@ -114,12 +142,12 @@ class List extends React.Component {
     }
 
     handleSearch(event, data) {
-        this.setState({ cardLoader: true });
+        this.setState({ cardLoader: true, maxCards: 150 });
         this.setState({ searchQuery: data.value }, this.filterData.bind(this));
     }
 
     reverseData() {
-        this.setState({ cardLoader: true })
+        this.setState({ cardLoader: true, maxCards: 150 });
         this.setState({ filteredData: this.state.filteredData.reverse() });
         setTimeout(() => this.setState({ cardLoader: false }), 0);
     }
@@ -135,7 +163,7 @@ class List extends React.Component {
             }
             /** if not in order */
             else {
-                if (data.value === 'ascend') {
+                if (data.value === 'ascend' || data.value === 'null') {
                     this.reverseData();
                 }
             }
@@ -158,6 +186,18 @@ class List extends React.Component {
 
     getColor(type) {
         return colors.find(color => color.name.includes(type)).value;
+    }
+
+    // handleSeeMore() {
+    //     this.setState({ isLoadingMore: true });
+    // }
+
+    displaySeeMore() {
+        const { filteredData, cardLoader, maxCards } = this.state;
+
+        return filteredData.length > maxCards && // if more cards to display
+            !cardLoader && // if cards not loading
+            maxCards < 900; // if not all pokemon displayed
     }
 
     render() {
@@ -186,21 +226,9 @@ class List extends React.Component {
                                     selection
                                     options={
                                         [
-                                            {
-                                                key: 0,
-                                                text: '',
-                                                value: 'ascend'
-                                            },
-                                            {
-                                                key: 'ascend',
-                                                text: 'ascending',
-                                                value: 'ascend'
-                                            },
-                                            {
-                                                key: 'descend',
-                                                text: 'descending',
-                                                value: 'descend'
-                                            }
+                                            { key: 0, text: '', value: 'null' },
+                                            { key: 'ascend', text: 'ascending', value: 'ascend' },
+                                            { key: 'descend', text: 'descending', value: 'descend' }
                                         ]
                                     }
                                     onChange={this.handleDropdown.bind(this)}
@@ -216,7 +244,7 @@ class List extends React.Component {
                     <Card.Group itemsPerRow={6} doubling={true}>
                         {
                             this.state.filteredData.map((pokemon, index) => {
-                                if (pokemon.id < 152) {
+                                if (index < this.state.maxCards) {
                                     return (
                                         <a
                                             class='ui card'
@@ -260,6 +288,11 @@ class List extends React.Component {
                         }
                     </Card.Group>
                 }
+                {
+                    this.displaySeeMore() &&
+                    <div ref={this.attachObserver} class="ui active centered inline loader" id='see-more'></div>
+                }
+                {/*<Button onClick={this.handleSeeMore.bind(this)}>See more</Button>*/}
             </Container>
         );
     }

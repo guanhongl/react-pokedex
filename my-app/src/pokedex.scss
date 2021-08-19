@@ -169,6 +169,7 @@ body {
         .card-header {
             margin-top: 0;
             margin-bottom: 10px;
+            color: rgb(102, 102, 102);
         }
 
         .type-button {
@@ -205,6 +206,7 @@ body {
 
         .evolution-header {
             font-weight: bold;
+            color: rgb(102, 102, 102);
 
             >span {
                 font-weight: initial;
@@ -267,6 +269,12 @@ body {
         //.ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
         //    background-color: whitesmoke;
         //}
+
+        @media (max-width: 450px) {
+            .evo-item {
+                width: 50px;
+            }
+        }
     }
 }
 
@@ -360,4 +368,8 @@ body {
 
 #card-loader {
     margin-top: 50px;
+}
+
+#see-more {
+    margin-top: 25px;
 }

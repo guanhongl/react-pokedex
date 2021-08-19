@@ -166,6 +166,7 @@ body {
 #pokedex .card .card-header {
   margin-top: 0;
   margin-bottom: 10px;
+  color: #666666;
 }
 #pokedex .card .type-button {
   cursor: unset;
@@ -195,6 +196,7 @@ body {
 }
 #pokedex #evolutions-row .evolution-header {
   font-weight: bold;
+  color: #666666;
 }
 #pokedex #evolutions-row .evolution-header > span {
   font-weight: initial;
@@ -241,6 +243,11 @@ body {
 #pokedex #evolutions-row .ui.toggle.checkbox input:focus:checked ~ .box:before,
 #pokedex #evolutions-row .ui.toggle.checkbox input:focus:checked ~ label:before {
   background-color: lightgrey !important;
+}
+@media (max-width: 450px) {
+  #pokedex #evolutions-row .evo-item {
+    width: 50px;
+  }
 }
 
 #top-menu {
@@ -302,6 +309,10 @@ body {
 
 #card-loader {
   margin-top: 50px;
+}
+
+#see-more {
+  margin-top: 25px;
 }
 
 /*# sourceMappingURL=style.css.map */
