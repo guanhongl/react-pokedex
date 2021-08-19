@@ -302,6 +302,10 @@ body {
   font-size: 9px;
   padding: 3px 0;
 }
+#list-container #no-results-header {
+  margin-top: 0;
+  color: #666666;
+}
 
 #list-loader {
   margin: 50px 0;

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
 import colors from './variables.json'
-import { Image, Container, Loader, Card, Grid, Input, Dropdown, Button } from 'semantic-ui-react';
+import { Image, Container, Loader, Card, Grid, Input, Dropdown, Button, Header } from 'semantic-ui-react';
 import axios from 'axios';
 import * as _ from 'underscore';
 
@@ -293,6 +293,10 @@ class List extends React.Component {
                     <div ref={this.attachObserver} class="ui active centered inline loader" id='see-more'></div>
                 }
                 {/*<Button onClick={this.handleSeeMore.bind(this)}>See more</Button>*/}
+                {
+                    this.state.filteredData.length === 0 &&
+                    <Header as='h3' textAlign='center' id='no-results-header'>No results found.</Header>
+                }
             </Container>
         );
     }
