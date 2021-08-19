@@ -32,7 +32,6 @@ class List extends React.Component {
                 resizer.observe(element);
             }
         };
-        this.clearResizer = () => resizer.disconnect();
 
         const observer = new IntersectionObserver(this.handleScroll, {
             root: null,
@@ -43,6 +42,11 @@ class List extends React.Component {
             if (element) {
                 observer.observe(element);
             }
+        };
+
+        this.clearObservers = () => {
+            resizer.disconnect();
+            observer.disconnect();
         };
     }
 
@@ -59,7 +63,7 @@ class List extends React.Component {
     }
 
     componentWillUnmount() {
-        this.clearResizer();
+        this.clearObservers();
     }
 
     handleOverflow(entries) {
