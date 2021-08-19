@@ -246,6 +246,7 @@ body {
 }
 #pokedex #evolutions-row .no-evo-header {
   padding: 1em 0;
+  color: #666666;
 }
 #pokedex #evolutions-row .ui.toggle.checkbox input:focus:checked ~ .box:before,
 #pokedex #evolutions-row .ui.toggle.checkbox input:focus:checked ~ label:before {

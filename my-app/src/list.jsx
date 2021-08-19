@@ -71,7 +71,9 @@ class List extends React.Component {
         const maxWidth = 230;
         const width = entries[0].contentRect.width;
         const filteredData = JSON.parse(JSON.stringify(this.state.filteredData));
-        if (entries.length === filteredData.length) {
+        console.log(entries.length)
+        if (entries.length === filteredData.length || entries.length === this.state.maxCards) {
+            console.log('resized')
             entries.forEach((entry, index) => {
                 const id = entry.target.id;
                 /** if name can be shortened */
@@ -91,7 +93,7 @@ class List extends React.Component {
 
     handleScroll(entries) {
         if (entries[0].isIntersecting) {
-            console.log('load more')
+            // console.log('load more')
             this.setState({ maxCards: this.state.maxCards + 150 });
         }
     }
@@ -139,7 +141,7 @@ class List extends React.Component {
         /** parse, stringify used to deep clone array */
         const filteredData = this.state.pokemonData.filter(pokemon =>
             /** TODO: if filter by maxlength = id, add id condition */
-            pokemon.name.includes(this.state.searchQuery.toLowerCase())
+            pokemon.name.includes(this.state.searchQuery.toLowerCase().replaceAll(' ', '-'))
         );
         this.setState({ filteredData });
         setTimeout(() => this.setState({ cardLoader: false }), 0);
@@ -197,11 +199,15 @@ class List extends React.Component {
     // }
 
     displaySeeMore() {
-        const { filteredData, cardLoader, maxCards } = this.state;
+        const { filteredData, cardLoader, maxCards, pokemonList } = this.state;
 
         return filteredData.length > maxCards && // if more cards to display
             !cardLoader && // if cards not loading
-            maxCards < 900; // if not all pokemon displayed
+            maxCards < pokemonList.length; // if not all pokemon displayed
+    }
+
+    noHyphen(name) {
+        return name.includes('-') ? name.replaceAll('-', ' ') : name;
     }
 
     render() {
@@ -266,7 +272,7 @@ class List extends React.Component {
                                             <Card.Content textAlign={'center'}>
                                                 <Image src={pokemon.sprite}/>
                                                 <div className='card-header'>
-                                                    {pokemon.name}
+                                                    {this.noHyphen(pokemon.name)}
                                                     <span>
                                                         #{pokemon.id.toString().padStart(3, '0')}
                                                     </span>

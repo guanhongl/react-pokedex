@@ -310,19 +310,21 @@ class Pokedex extends React.Component {
         }
         /** finish search */
         else {
-            const filteredResults = ( this.state.pokemonList.filter(name => name.includes(value.toLowerCase())) ).map(elem => ({
+            const filteredResults = (
+                this.state.pokemonList.filter(name => name.includes(value.toLowerCase().replaceAll(' ', '-')))
+            ).map(elem => ({
                 childKey: elem,
                 id: elem,
-                title: elem,
+                title: this.noHyphen(elem)
             }) );
             this.setState({ searchResults: filteredResults });
         }
     }
 
     handleSearchSelect(event, data) {
-        this.setState({ searchQuery: data.result.title });
+        this.setState({ searchQuery: data.result.id });
         // this.setState({ isLoadingSingle: true }, () => this.getPokemon(this.state.searchQuery));
-        const path = `/search/pokemon/${data.result.title}`;
+        const path = `/search/pokemon/${data.result.id}`;
         this.props.history.push(path);
     }
 
@@ -351,6 +353,10 @@ class Pokedex extends React.Component {
         this.setState({ active: false });
     }
 
+    noHyphen(name) {
+        return name.includes('-') ? name.replaceAll('-', ' ') : name;
+    }
+
     /** https://www.schemecolor.com/red-orange-green-gradient.php */
     fillBar(value) {
         if (value < 50) {
@@ -373,6 +379,10 @@ class Pokedex extends React.Component {
      */
     render() {
         const pokemon = this.state.pokemon;
+        const displayID = pokemon.id <= this.state.pokemonList.length
+            ? pokemon.id
+            : this.state.pokemonList.findIndex(e => e === pokemon.forms[0]) + 1;
+        const displayName = this.noHyphen(pokemon.name);
         const graphData = Object.keys(pokemon.stats).map(stat => ({
             name: `${stat} (${pokemon.stats[stat]})`,
             value: pokemon.stats[stat]
@@ -399,7 +409,7 @@ class Pokedex extends React.Component {
                                         onResultSelect={(event, data) => this.handleSearchSelect(event, data)}
                                         onSearchChange={(event, data) => this.handleSearchChange(event, data)}
                                         results={this.state.searchResults}
-                                        value={this.state.searchQuery}
+                                        value={this.noHyphen(this.state.searchQuery)}
                                         placeholder='Search for Pokemon...'
                                         noResultsMessage='No Pokemon found.'
                                     />
@@ -412,7 +422,7 @@ class Pokedex extends React.Component {
                                             selection
                                             options={pokemon.forms.map(form => ({
                                                 key: form,
-                                                text: form,
+                                                text: this.noHyphen(form),
                                                 value: form
                                             }))}
                                             onChange={(event, data) => this.handleDropdown(event, data)}
@@ -434,7 +444,7 @@ class Pokedex extends React.Component {
                                         </div>
                                         {/** name + id */}
                                         <Header as='h2' className='card-header'>
-                                            {pokemon.name} #{pokemon.id}
+                                            {displayName} #{displayID}
                                             <Header.Subheader>
                                                 {pokemon.height/10}m | {pokemon.weight !== 10000 ? pokemon.weight/10 : '???'}kg
                                             </Header.Subheader>
@@ -457,15 +467,17 @@ class Pokedex extends React.Component {
                                         <div>
                                             {
                                                 Object.keys(pokemon.abilities).map(ability => {
-                                                    return (<Button
-                                                                size={'mini'}
-                                                                className='ability-button'
-                                                                key={ability}
-                                                                onClick={() => this.handleAbilityClick(ability, pokemon.abilities[ability])}
-                                                            >
-                                                                {ability.toUpperCase()}
-                                                                <Icon name='info circle' className='top-right-icon' />
-                                                            </Button>);
+                                                    return (
+                                                        <Button
+                                                            size={'mini'}
+                                                            className='ability-button'
+                                                            key={ability}
+                                                            onClick={() => this.handleAbilityClick(ability, pokemon.abilities[ability])}
+                                                        >
+                                                            {this.noHyphen(ability.toUpperCase())}
+                                                            <Icon name='info circle' className='top-right-icon' />
+                                                        </Button>
+                                                    );
                                                 })
                                             }
                                         </div>
@@ -520,7 +532,7 @@ class Pokedex extends React.Component {
                         </Grid>
                 }
                 <AbilityDesc active={this.state.active} handleClose={this.handleAbilityClose}
-                             ability={this.state.ability} desc={this.state.desc} />
+                             ability={this.noHyphen(this.state.ability)} desc={this.state.desc} />
             </Container>
         );
     }

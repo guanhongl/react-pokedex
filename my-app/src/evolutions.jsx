@@ -57,6 +57,10 @@ class Evolutions extends React.Component {
         }
     }
 
+    noHyphen(name) {
+        return name[0].includes('-') ? name[0].replaceAll('-', ' ') : name;
+    }
+
     render() {
         const sprites = this.state.sprites;
         const types = this.state.types;
@@ -88,7 +92,7 @@ class Evolutions extends React.Component {
                                                 >
                                                     {/*{console.log(sprites[Object.values(pokemon)])}*/}
                                                     <Image src={sprites[Object.values(pokemon)]}/>
-                                                    <div className='evolution-header'>{Object.keys(pokemon)}
+                                                    <div className='evolution-header'>{this.noHyphen(Object.keys(pokemon))}
                                                         <span> #{Object.values(pokemon)[0].padStart(3, '0')}</span>
                                                     </div>
                                                     <div>
