@@ -22,7 +22,8 @@ class List extends React.Component {
             cardLoader: false,
             maxCards: 150,
             // isLoadingMore: true,
-            entries: []
+            entries: [],
+            sort: ''
         };
         this.handleOverflow = this.handleOverflow.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
@@ -33,6 +34,7 @@ class List extends React.Component {
                 resizer.observe(element);
             }
         };
+        this.clearResizer = () => resizer.disconnect();
 
         const observer = new IntersectionObserver(this.handleScroll, {
             root: null,
@@ -64,6 +66,10 @@ class List extends React.Component {
         if (this.state.entries.length > prevState.entries.length) {
             this.handleOverflow(this.state.entries);
         }
+        /** if dropdown or search query changes */
+        if (this.state.sort !== prevState.sort || this.state.filteredData.length !== prevState.filteredData.length) {
+            this.handleSort();
+        }
     }
 
     componentWillUnmount() {
@@ -71,7 +77,7 @@ class List extends React.Component {
     }
 
     handleOverflow(entries) {
-        if (this.state.entries.length !== this.state.maxCards && this.state.entries.length !== this.state.pokemonList.length) {
+        if (this.state.entries.length !== this.state.maxCards && this.state.entries.length !== this.state.filteredData.length) {
             const OLD = [...this.state.entries]; // need to deep clone?
             const OLD_IDS = _.pluck(_.pluck(OLD, 'target'), 'id');
             const NEW_IDS = _.pluck(_.pluck(entries, 'target'), 'id');
@@ -170,32 +176,51 @@ class List extends React.Component {
     }
 
     handleSearch(event, data) {
-        this.setState({ cardLoader: true, maxCards: 150 });
+        this.setState({ cardLoader: true, maxCards: 150, entries: [] }, () => this.clearResizer());
         this.setState({ searchQuery: data.value }, this.filterData.bind(this));
     }
 
-    reverseData() {
-        this.setState({ cardLoader: true, maxCards: 150 });
-        this.setState({ filteredData: this.state.filteredData.reverse() });
-        setTimeout(() => this.setState({ cardLoader: false }), 0);
-    }
-
-    handleDropdown(event, data) {
+    handleSort() {
         const filteredData = this.state.filteredData;
         if (filteredData.length > 1) {
             /** if in order */
             if (filteredData[filteredData.length - 1].id > filteredData[0].id ) {
-                if (data.value === 'descend') {
+                if (this.state.sort === 'descend') {
                     this.reverseData();
                 }
             }
             /** if not in order */
             else {
-                if (data.value === 'ascend' || data.value === 'null') {
+                if (this.state.sort === 'ascend') {
                     this.reverseData();
                 }
             }
         }
+    }
+
+    reverseData() {
+        this.setState({ cardLoader: true, maxCards: 150, entries: [] }, () => this.clearResizer());
+        this.setState({ filteredData: this.state.filteredData.reverse() });
+        setTimeout(() => this.setState({ cardLoader: false }), 0);
+    }
+
+    handleDropdown(event, data) {
+        // const filteredData = this.state.filteredData;
+        // if (filteredData.length > 1) {
+        //     /** if in order */
+        //     if (filteredData[filteredData.length - 1].id > filteredData[0].id ) {
+        //         if (data.value === 'descend') {
+        //             this.reverseData();
+        //         }
+        //     }
+        //     /** if not in order */
+        //     else {
+        //         if (data.value === 'ascend') {
+        //             this.reverseData();
+        //         }
+        //     }
+        // }
+        this.setState({ sort: data.value });
     }
 
     getPokemon(id) {
@@ -258,7 +283,6 @@ class List extends React.Component {
                                     selection
                                     options={
                                         [
-                                            { key: 0, text: '', value: 'null' },
                                             { key: 'ascend', text: 'ascending', value: 'ascend' },
                                             { key: 'descend', text: 'descending', value: 'descend' }
                                         ]
