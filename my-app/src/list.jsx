@@ -22,6 +22,7 @@ class List extends React.Component {
             cardLoader: false,
             maxCards: 150,
             // isLoadingMore: true,
+            entries: []
         };
         this.handleOverflow = this.handleOverflow.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
@@ -54,12 +55,15 @@ class List extends React.Component {
         this.getPokemonList();
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         // if (this.state.isLoadingMore) {
         //     setTimeout(
         //         () => this.setState({ maxCards: this.state.maxCards + 150, isLoadingMore: false })
         //     , 0);
         // }
+        if (this.state.entries.length > prevState.entries.length) {
+            this.handleOverflow(this.state.entries);
+        }
     }
 
     componentWillUnmount() {
@@ -67,6 +71,18 @@ class List extends React.Component {
     }
 
     handleOverflow(entries) {
+        if (this.state.entries.length !== this.state.maxCards && this.state.entries.length !== this.state.pokemonList.length) {
+            const OLD = [...this.state.entries]; // need to deep clone?
+            const OLD_IDS = _.pluck(_.pluck(OLD, 'target'), 'id');
+            const NEW_IDS = _.pluck(_.pluck(entries, 'target'), 'id');
+            NEW_IDS.forEach((id, index) => {
+                if (!OLD_IDS.includes(id)) {
+                    OLD.push(entries[index]);
+                }
+            });
+            this.setState({ entries: OLD });
+        }
+
         /** maxWidth is static */
         const maxWidth = 230;
         const width = entries[0].contentRect.width; // width of card
@@ -100,7 +116,7 @@ class List extends React.Component {
     handleScroll(entries) {
         if (entries[0].isIntersecting) {
             // console.log('load more')
-            this.setState({ maxCards: this.state.maxCards + 150 }, () => document.dispatchEvent(new Event('resize')));
+            this.setState({ maxCards: this.state.maxCards + 150 });
         }
     }
 
