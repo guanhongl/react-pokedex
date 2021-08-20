@@ -252,9 +252,24 @@ body {
 #pokedex #evolutions-row .ui.toggle.checkbox input:focus:checked ~ label:before {
   background-color: lightgrey !important;
 }
-@media (max-width: 450px) {
+@media (max-width: 500px) {
   #pokedex #evolutions-row .evo-item {
     width: 50px;
+  }
+  #pokedex #evolutions-row .type-button {
+    width: 24px;
+    font-size: 4px;
+  }
+  #pokedex #evolutions-row .evolution-header {
+    font-size: 2vw;
+  }
+  #pokedex #evolutions-row #evo-grid {
+    margin-top: 3rem !important;
+  }
+  #pokedex #evolutions-row span::before {
+    content: "";
+    clear: right;
+    display: block;
   }
 }
 

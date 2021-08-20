@@ -279,9 +279,24 @@ body {
         //    background-color: whitesmoke;
         //}
 
-        @media (max-width: 450px) {
+        @media (max-width: 500px) {
             .evo-item {
                 width: 50px;
+            }
+            .type-button {
+                width: 24px;
+                font-size: 4px;
+            }
+            .evolution-header {
+                font-size: 2vw;
+            }
+            #evo-grid {
+                margin-top: 3rem !important;
+            }
+            span::before {
+                content: '';
+                clear: right;
+                display: block;
             }
         }
     }
