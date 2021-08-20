@@ -69,21 +69,27 @@ class List extends React.Component {
     handleOverflow(entries) {
         /** maxWidth is static */
         const maxWidth = 230;
-        const width = entries[0].contentRect.width;
+        const width = entries[0].contentRect.width; // width of card
         const filteredData = JSON.parse(JSON.stringify(this.state.filteredData));
-        console.log(entries.length)
         if (entries.length === filteredData.length || entries.length === this.state.maxCards) {
-            console.log('resized')
+            console.log(entries.length)
             entries.forEach((entry, index) => {
                 const id = entry.target.id;
-                /** if name can be shortened */
-                if (this.state.pokemonList[id - 1].includes('-')) {
-                    /** reset name */
-                    filteredData[index].name = this.state.pokemonList[id - 1];
+                /** if name can be shortened and more than 10 chars. */
+                if (this.state.pokemonList[id - 1].includes('-') && this.state.pokemonList[id - 1].length > 10) {
+                    try {
+                        /** reset name */
+                        filteredData[index].name = this.state.pokemonList[id - 1];
 
-                    /** if maxWidth > width, shorten name */
-                    if (maxWidth > width) {
-                        filteredData[index].name = filteredData[index].name.split('-')[0];
+                        /** if maxWidth > width, shorten name */
+                        if (maxWidth > width) {
+                            filteredData[index].name = filteredData[index].name.split('-')[0];
+                        }
+
+                        console.log('resize')
+                    }
+                    catch (error) {
+                        console.log(error)
                     }
                 }
             });
@@ -94,7 +100,7 @@ class List extends React.Component {
     handleScroll(entries) {
         if (entries[0].isIntersecting) {
             // console.log('load more')
-            this.setState({ maxCards: this.state.maxCards + 150 });
+            this.setState({ maxCards: this.state.maxCards + 150 }, () => document.dispatchEvent(new Event('resize')));
         }
     }
 
