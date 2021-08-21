@@ -430,3 +430,17 @@ body {
         }
     }
 }
+
+#error-page {
+    margin: 50px 0;
+    text-align: center;
+
+    h1 {
+        font-size: 96px;
+        margin-bottom: -12px;
+    }
+
+    span {
+        font-size: 24px;
+    }
+}

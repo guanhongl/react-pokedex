@@ -1,13 +1,14 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Container, Header } from 'semantic-ui-react';
+import {  } from 'semantic-ui-react';
 
 const ErrorPage = () => {
     return (
-        <Container>
-            <Header>Page Not Found!</Header>
-        </Container>
+        <div id='error-page'>
+            <h1>404</h1>
+            <span>Page not found.</span>
+        </div>
     );
 };
 

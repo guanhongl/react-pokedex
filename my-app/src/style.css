@@ -366,4 +366,16 @@ body {
   overflow-y: auto;
 }
 
+#error-page {
+  margin: 50px 0;
+  text-align: center;
+}
+#error-page h1 {
+  font-size: 96px;
+  margin-bottom: -12px;
+}
+#error-page span {
+  font-size: 24px;
+}
+
 /*# sourceMappingURL=style.css.map */
