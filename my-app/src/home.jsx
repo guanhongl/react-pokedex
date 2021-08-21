@@ -75,7 +75,7 @@ class Home extends React.Component {
         this.setState({ searchQuery: data.result.id });
         // const path = `/search/pokemon/${data.result.id}`;
         // this.props.history.push(path);
-        window.location.href = `/search/pokemon/${data.result.id}`;
+        window.location.href = `/search/pokemon/${data.result.id}`; // will refresh page
     }
 
     noHyphen(name) {
@@ -90,7 +90,7 @@ class Home extends React.Component {
                         <Divider vertical>Or</Divider>
 
                         <Grid.Row verticalAlign='middle'>
-                            <Grid.Column>
+                            <Grid.Column className='col-one'>
                                 <Header icon>
                                     <Icon name='search' />
                                     Find Pokemon

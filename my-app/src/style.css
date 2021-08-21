@@ -155,6 +155,21 @@ body {
   max-height: 200px;
   overflow-y: auto;
 }
+@media only screen and (max-width: 767px) {
+  #pokedex .three.column.row .column {
+    padding: 2px !important;
+  }
+  #pokedex .three.column.row .ui.selection.dropdown {
+    min-height: auto !important;
+    height: 1.5em;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  #pokedex .three.column.row .ui.selection.dropdown i {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+}
 #pokedex .card {
   text-align: center;
   background-color: white;
@@ -254,14 +269,14 @@ body {
 }
 @media (max-width: 500px) {
   #pokedex #evolutions-row .evo-item {
-    width: 50px;
+    width: fit-content;
+    margin: 0 auto;
   }
   #pokedex #evolutions-row .type-button {
-    width: 24px;
-    font-size: 4px;
+    display: none;
   }
   #pokedex #evolutions-row .evolution-header {
-    font-size: 2vw;
+    font-size: 3vw;
   }
   #pokedex #evolutions-row #evo-grid {
     margin-top: 3rem !important;
@@ -270,6 +285,12 @@ body {
     content: "";
     clear: right;
     display: block;
+  }
+  #pokedex #evolutions-row .evo-arrow {
+    bottom: 50px;
+  }
+  #pokedex #evolutions-row img {
+    width: 50px;
   }
 }
 
@@ -340,6 +361,21 @@ body {
   margin-top: 0;
   color: #666666;
 }
+@media only screen and (max-width: 767px) {
+  #list-container .three.column.row .column {
+    padding: 2px !important;
+  }
+  #list-container .three.column.row .ui.selection.dropdown {
+    min-height: auto !important;
+    height: 1.5em;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  #list-container .three.column.row .ui.selection.dropdown i {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+}
 
 #list-loader {
   margin: 50px 0;
@@ -364,6 +400,14 @@ body {
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
+}
+@media (max-width: 767px) {
+  #home .ui.vertical.divider {
+    display: none;
+  }
+  #home .col-one {
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+  }
 }
 
 #error-page {

@@ -158,6 +158,25 @@ body {
         overflow-y: auto;
     }
 
+    @media only screen and (max-width: 767px) {
+        .three.column.row {
+            .column {
+                padding: 2px !important;
+            }
+            .ui.selection.dropdown {
+                min-height: auto !important;
+                height: 1.5em;
+                padding-top: 2px;
+                padding-bottom: 2px;
+
+                i {
+                    padding-top: 2px;
+                    padding-bottom: 2px;
+                }
+            }
+        }
+    }
+
     .card {
         text-align: center;
         background-color: white;
@@ -281,14 +300,15 @@ body {
 
         @media (max-width: 500px) {
             .evo-item {
-                width: 50px;
+                width: fit-content;
+                margin: 0 auto;
             }
             .type-button {
-                width: 24px;
-                font-size: 4px;
+                //font-size: 4px;
+                display: none;
             }
             .evolution-header {
-                font-size: 2vw;
+                font-size: 3vw;
             }
             #evo-grid {
                 margin-top: 3rem !important;
@@ -297,6 +317,12 @@ body {
                 content: '';
                 clear: right;
                 display: block;
+            }
+            .evo-arrow {
+                bottom: 50px;
+            }
+            img {
+                width: 50px;
             }
         }
     }
@@ -402,6 +428,25 @@ body {
         margin-top: 0;
         color: rgb(102, 102, 102);
     }
+
+    @media only screen and (max-width: 767px) {
+        .three.column.row {
+            .column {
+                padding: 2px !important;
+            }
+            .ui.selection.dropdown {
+                min-height: auto !important;
+                height: 1.5em;
+                padding-top: 2px;
+                padding-bottom: 2px;
+
+                i {
+                    padding-top: 2px;
+                    padding-bottom: 2px;
+                }
+            }
+        }
+    }
 }
 
 #list-loader {
@@ -427,6 +472,15 @@ body {
             width: 100%;
             max-height: 200px;
             overflow-y: auto;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .ui.vertical.divider {
+            display: none;
+        }
+        .col-one {
+            border-bottom: 1px solid rgba(34, 36, 38, 0.15);
         }
     }
 }
