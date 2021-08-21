@@ -1,23 +1,18 @@
 import React from 'react';
 import './style.css';
 import 'semantic-ui-css/semantic.min.css';
-import { Grid, Icon } from 'semantic-ui-react';
+import { Icon } from 'semantic-ui-react';
 
 const Footer = () => {
     return (
-        <Grid container id='footer'>
-            <Grid.Row columns={3}>
-                <Grid.Column>
-
-                </Grid.Column>
-                <Grid.Column>
-
-                </Grid.Column>
-                <Grid.Column>
-                    <Icon name='github' />
-                </Grid.Column>
-            </Grid.Row>
-        </Grid>
+        <div id='footer'>
+            <h5>A webapp built by <u><a href='https://github.com/guanhongl' target='_blank'>Steven</a></u></h5>
+            <span>Data fetched from <u><a href='https://pokeapi.co/' target='_blank'>PokeAPI</a></u></span>
+            <div>
+                <Icon name='github' />
+                <span><u><a href='https://github.com/guanhongl/react-pokedex' target='_blank'>Visit the github page</a></u></span>
+            </div>
+        </div>
     );
 };
 

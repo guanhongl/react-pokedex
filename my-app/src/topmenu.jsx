@@ -12,7 +12,6 @@ const TopMenu = () => {
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
 
-    console.log(window.location.pathname)
     return (
         <Menu pointing secondary id='top-menu'>
             <Link to='/'>

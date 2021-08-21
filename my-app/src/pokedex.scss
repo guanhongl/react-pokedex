@@ -329,7 +329,20 @@ body {
 }
 
 #footer {
-    border-top: darkgray 1px solid;
+    border-top: 3px solid rgba(34, 36, 38, 0.15);
+    width: 85%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 25px 0;
+    color: #666;
+
+    h5 {
+        margin: 0;
+    }
+
+    a {
+        color: inherit;
+    }
 }
 
 #list-container {
