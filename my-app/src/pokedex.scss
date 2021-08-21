@@ -415,3 +415,18 @@ body {
 #see-more {
     margin-top: 25px;
 }
+
+#home {
+    margin: 50px 0;
+
+    .ui.search {
+        width: fit-content;
+        margin: 0 auto;
+
+        >.results {
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    }
+}

@@ -353,4 +353,17 @@ body {
   margin-top: 25px;
 }
 
+#home {
+  margin: 50px 0;
+}
+#home .ui.search {
+  width: fit-content;
+  margin: 0 auto;
+}
+#home .ui.search > .results {
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 /*# sourceMappingURL=style.css.map */
