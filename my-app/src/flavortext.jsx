@@ -19,6 +19,16 @@ class FlavorText extends React.Component {
     }
 
     componentDidMount() {
+        this.getInfo();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.name !== prevProps.name) {
+            this.getInfo();
+        }
+    }
+
+    getInfo() {
         axios.get(`https://pokeapi.co/api/v2/pokemon-species/${this.props.name}`)
             .then(response => {
                 const info = _.uniq(_.pluck(
