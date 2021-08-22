@@ -40,7 +40,7 @@ class FlavorText extends React.Component {
 
     getRandomInfo() {
         const randomIndex = Math.floor(Math.random() * this.state.info.length);
-        this.setState({ randomInfo: this.state.info[randomIndex] });
+        this.setState({ randomInfo: this.state.info[randomIndex].replace(/\f/g, ' ') });
     }
 
     render() {
@@ -49,7 +49,7 @@ class FlavorText extends React.Component {
                 <Container id='info-div'>
                     <Header as='h2' icon inverted>
                         {this.props.name.replace('-', ' ')}
-                        <Header.Subheader>{this.state.randomInfo}</Header.Subheader>
+                        <Header.Subheader>{this.state.randomInfo.replace(/\f/g, ' ')}</Header.Subheader>
                     </Header>
                     <div>
                         <Button inverted icon='random' content='Get random entry' floated='right'
