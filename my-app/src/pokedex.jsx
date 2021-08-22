@@ -8,6 +8,7 @@ import axios from 'axios';
 import * as _ from 'underscore';
 import Evolutions from './evolutions';
 import AbilityDesc from './abilitydesc';
+import FlavorText from './flavortext';
 
 /**
  * the pokedex component
@@ -44,6 +45,8 @@ class Pokedex extends React.Component {
             desc: '',
             /** flip image */
             flipImage: false,
+            /** info modal */
+            infoActive: false
         };
         this.getPokemon = this.getPokemon.bind(this);
         this.setPokemon = this.setPokemon.bind(this);
@@ -57,6 +60,7 @@ class Pokedex extends React.Component {
         this.handleDropdown = this.handleDropdown.bind(this);
         this.handleAbilityClick = this.handleAbilityClick.bind(this);
         this.handleAbilityClose = this.handleAbilityClose.bind(this);
+        this.handleInfoClose = this.handleInfoClose.bind(this);
     }
 
     /**
@@ -353,6 +357,10 @@ class Pokedex extends React.Component {
         this.setState({ active: false });
     }
 
+    handleInfoClose() {
+        this.setState({ infoActive: false });
+    }
+
     noHyphen(name) {
         return name.includes('-') ? name.replaceAll('-', ' ') : name;
     }
@@ -433,6 +441,8 @@ class Pokedex extends React.Component {
                             <Grid.Row columns={2}>
                                 <Grid.Column>
                                     <div className='card'>
+                                        <Icon name='info circle' size='large' className='info-icon'
+                                              onClick={() => this.setState({ infoActive: true })} />
                                         {/** sprites */}
                                         <div className='sprite-div'>
                                             <Image src={this.state.flipImage && pokemon.sprites[1] ?
@@ -533,6 +543,10 @@ class Pokedex extends React.Component {
                 }
                 <AbilityDesc active={this.state.active} handleClose={this.handleAbilityClose}
                              ability={this.noHyphen(this.state.ability)} desc={this.state.desc} />
+                {
+                    pokemon.name &&
+                    <FlavorText active={this.state.infoActive} handleClose={this.handleInfoClose} name={pokemon.name}/>
+                }
             </Container>
         );
     }

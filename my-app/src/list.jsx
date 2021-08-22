@@ -8,7 +8,7 @@ import axios from 'axios';
 import * as _ from 'underscore';
 
 /**
- * the top menu component
+ * the list component
  */
 class List extends React.Component {
     constructor(props) {

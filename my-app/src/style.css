@@ -209,6 +209,13 @@ body {
   right: 3px;
   margin: 0;
 }
+#pokedex .card .info-icon {
+  position: absolute;
+  right: 5%;
+  color: #666;
+  cursor: pointer;
+  z-index: 1;
+}
 #pokedex .bar-chart {
   font-weight: bold;
 }
@@ -420,6 +427,11 @@ body {
 }
 #error-page span {
   font-size: 24px;
+}
+
+#info-div .sub.header {
+  margin-top: 14px;
+  margin-bottom: 28px;
 }
 
 /*# sourceMappingURL=style.css.map */

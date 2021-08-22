@@ -4,7 +4,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { Container, Dimmer, Header } from 'semantic-ui-react';
 
 /**
- * the home page component
+ * the ability description modal
  */
 const AbilityDesc = (props) => {
     return (
