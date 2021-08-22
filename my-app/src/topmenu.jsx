@@ -17,7 +17,7 @@ const TopMenu = () => {
             <Link to='/'>
                 <Menu.Item
                     as='div'
-                    active={window.location.pathname === '/'}
+                    active={window.location.hash === '#/'}
                     onClick={forceUpdate}
                 >
                     <Image className='logo' src={logo} alt='logo' />
@@ -29,13 +29,13 @@ const TopMenu = () => {
             <Menu.Item
                 as='div'
                 position='right'
-                active={window.location.pathname.includes('/search')}
+                active={window.location.hash.includes('#/search')}
             >
                 <Link to='/search/pokemon/pikachu' onClick={forceUpdate}>Search</Link>
             </Menu.Item>
             <Menu.Item
                 as='div'
-                active={window.location.pathname === '/list'}
+                active={window.location.hash === '#/list'}
             >
                 <Link to='/list' onClick={forceUpdate}>List View</Link>
             </Menu.Item>

@@ -227,7 +227,7 @@ class List extends React.Component {
         // const path = `/search/pokemon/${name}`;
         // this.props.history.push(path);
         const name = this.state.pokemonList[id - 1];
-        window.open(`/search/pokemon/${name}`, '_blank').focus();
+        window.open(`#/search/pokemon/${name}`, '_blank').focus();
     }
 
     getGradient(type1, type2) {

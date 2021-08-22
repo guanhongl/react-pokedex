@@ -6,7 +6,7 @@ import Footer from './footer';
 import Home from './home';
 import List from './list';
 import ErrorPage from './errorpage';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 class App extends React.Component {
     render() {

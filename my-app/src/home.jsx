@@ -75,7 +75,7 @@ class Home extends React.Component {
         this.setState({ searchQuery: data.result.id });
         // const path = `/search/pokemon/${data.result.id}`;
         // this.props.history.push(path);
-        window.location.href = `/search/pokemon/${data.result.id}`; // will refresh page
+        window.location.hash = `#/search/pokemon/${data.result.id}`; // will refresh page
     }
 
     noHyphen(name) {
@@ -111,7 +111,7 @@ class Home extends React.Component {
                                     <Icon name='world' />
                                     View all Pokemon
                                 </Header>
-                                <Button color='red' onClick={() => window.location.href='/list'}>View</Button>
+                                <Button color='red' onClick={() => window.location.hash='#/list'}>View</Button>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
