@@ -512,4 +512,16 @@ body {
         margin-top: 14px;
         margin-bottom: 28px;
     }
+
+    .ui.pagination.menu {
+        background-color: transparent;
+
+        .item {
+            color: rgba(255,255,255,.8);
+            font-weight: bold;
+        }
+        .active.item {
+            border: 1px solid white;
+        }
+    }
 }

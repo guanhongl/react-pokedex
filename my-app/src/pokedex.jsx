@@ -524,7 +524,7 @@ class Pokedex extends React.Component {
                             </Grid.Row>
                             <Grid.Row centered id='evolutions-row' className={`${pokemon.types[0]}-border`}>
                                 <Label attached='top' className={`evo-label ${pokemon.types[0]}`}>
-                                    EVOLUTIONS
+                                    evolutions
                                     <span>
                                         <label>show all </label>
                                         <Checkbox toggle onClick={this.handleToggle.bind(this)} checked={this.state.toggled}/>

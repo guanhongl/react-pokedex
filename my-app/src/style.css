@@ -433,5 +433,15 @@ body {
   margin-top: 14px;
   margin-bottom: 28px;
 }
+#info-div .ui.pagination.menu {
+  background-color: transparent;
+}
+#info-div .ui.pagination.menu .item {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+}
+#info-div .ui.pagination.menu .active.item {
+  border: 1px solid white;
+}
 
 /*# sourceMappingURL=style.css.map */
