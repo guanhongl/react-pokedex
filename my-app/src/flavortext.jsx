@@ -30,7 +30,7 @@ class FlavorText extends React.Component {
     }
 
     getInfo() {
-        axios.get(`https://pokeapi.co/api/v2/pokemon-species/${this.props.name}`)
+        axios.get(`https://pokeapi.co/api/v2/pokemon-species/${this.props.id}`)
             .then(response => {
                 const info = _.uniq(_.pluck(
                     _.filter(response.data.flavor_text_entries, info => info.language.name === 'en')

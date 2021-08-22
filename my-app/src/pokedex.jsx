@@ -495,7 +495,7 @@ class Pokedex extends React.Component {
                                 </Grid.Column>
                                 <Grid.Column>
                                     {/** stats */}
-                                    <ResponsiveContainer width="100%" height="100%">
+                                    <ResponsiveContainer width="100%" height={293}>
                                         <BarChart
                                             className='bar-chart'
                                             data={graphData}
@@ -545,7 +545,8 @@ class Pokedex extends React.Component {
                              ability={this.noHyphen(this.state.ability)} desc={this.state.desc} />
                 {
                     pokemon.name &&
-                    <FlavorText active={this.state.infoActive} handleClose={this.handleInfoClose} name={pokemon.name}/>
+                    <FlavorText active={this.state.infoActive} handleClose={this.handleInfoClose} name={pokemon.name}
+                                id={pokemon.id}/>
                 }
             </Container>
         );
