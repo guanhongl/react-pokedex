@@ -53,7 +53,7 @@ class FlavorText extends React.Component {
                 <Container id='info-div'>
                     <Header as='h2' icon inverted>
                         {this.props.name.replace('-', ' ')}
-                        <Header.Subheader>{ENTRY.replace(/\f/g, ' ')}</Header.Subheader>
+                        <Header.Subheader>{ENTRY?.replace(/\f/g, ' ') ?? ""}</Header.Subheader>
                     </Header>
                     <div>
                         {/*<Button inverted icon='random' content='Get random entry' floated='right'*/}

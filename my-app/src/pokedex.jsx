@@ -544,7 +544,7 @@ class Pokedex extends React.Component {
                 <AbilityDesc active={this.state.active} handleClose={this.handleAbilityClose}
                              ability={this.noHyphen(this.state.ability)} desc={this.state.desc} />
                 {
-                    pokemon.name &&
+                    pokemon.name && pokemon.id &&
                     <FlavorText active={this.state.infoActive} handleClose={this.handleInfoClose} name={pokemon.name}
                                 id={pokemon.id}/>
                 }
